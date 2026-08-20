@@ -1,0 +1,306 @@
+@import "tailwindcss";
+
+/* ============================================================
+   GASKEUN — Premium Interactive Dashboard System
+   ============================================================ */
+
+@theme {
+    --font-sans: 'Poppins', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    
+    /* Brand Colors */
+    --color-brand: #0B5240;
+    --color-brand-light: #14765C;
+    --color-brand-dark: #052b21;
+    --color-brand-soft: #e6f2ef; /* Sangat muda, cocok untuk hover/focus ring */
+    
+    /* Backgrounds */
+    --color-bg-base: #f4f7f6; 
+    --color-bg-card: #ffffff;
+    
+    /* Text */
+    --color-text-main: #1e293b;
+    --color-text-muted: #64748b;
+    
+    /* Borders */
+    --color-border: rgba(226, 232, 240, 0.8);
+}
+
+@layer base {
+    html { scroll-behavior: smooth; }
+    
+    body {
+        background-color: var(--color-bg-base);
+        color: var(--color-text-main);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Custom Scrollbar Premium */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--color-bg-base); }
+    ::-webkit-scrollbar-thumb { 
+        background: #cbd5e1; 
+        border-radius: 100px; 
+        transition: background 0.3s;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--color-brand-light); }
+}
+
+@layer components {
+
+    /* ====================
+       CARDS (ELEVATED & INTERACTIVE)
+       ==================== */
+    .card {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: 1.25rem; /* Lebih melengkung */
+        box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.03);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    /* Efek melayang saat di-hover */
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 32px -8px rgba(20, 118, 92, 0.12); /* Bayangan hijau lembut */
+        border-color: rgba(20, 118, 92, 0.2);
+    }
+
+    /* ====================
+       BUTTONS (MICRO-ANIMATED)
+       ==================== */
+    .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.75rem;
+        background: linear-gradient(135deg, var(--color-brand), var(--color-brand-light));
+        color: white;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 0.75rem;
+        border: none;
+        box-shadow: 0 4px 12px rgba(11, 82, 64, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* Kilau (Glow) efek saat di-hover */
+    .btn-primary::after {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%; width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+        transition: all 0.6s ease;
+    }
+    .btn-primary:hover::after {
+        left: 100%;
+    }
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(11, 82, 64, 0.35);
+    }
+    .btn-primary:active {
+        transform: translateY(1px) scale(0.96);
+        box-shadow: 0 2px 8px rgba(11, 82, 64, 0.2);
+    }
+
+    .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.75rem;
+        background: #ffffff;
+        color: var(--color-text-main);
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 0.75rem;
+        border: 1px solid #cbd5e1;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-secondary:hover {
+        background: var(--color-brand-soft);
+        color: var(--color-brand);
+        border-color: var(--color-brand-light);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(11, 82, 64, 0.08);
+    }
+    .btn-secondary:active {
+        transform: translateY(1px) scale(0.96);
+    }
+
+    /* ====================
+       FORM INPUTS (INTERACTIVE FOCUS)
+       ==================== */
+    .label-field {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--color-text-muted);
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        transition: color 0.3s ease;
+    }
+    
+    /* Ganti warna label saat input di dalamnya sedang fokus */
+    div:has(.input-field:focus) .label-field,
+    div:has(.select-field:focus) .label-field {
+        color: var(--color-brand-light);
+    }
+
+    .input-field, .select-field {
+        width: 100%;
+        padding: 0.875rem 1.25rem;
+        background: #f8fafc; /* Warna sedikit abu agar beda dari card */
+        border: 1px solid var(--color-border);
+        border-radius: 0.75rem;
+        color: var(--color-text-main);
+        font-size: 0.9rem;
+        font-family: var(--font-sans);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        outline: none;
+    }
+    .input-field:hover, .select-field:hover {
+        background: #ffffff;
+        border-color: #cbd5e1;
+    }
+    .input-field:focus, .select-field:focus {
+        background: #ffffff;
+        border-color: var(--color-brand-light);
+        box-shadow: 0 0 0 4px var(--color-brand-soft), 0 4px 12px rgba(0,0,0,0.03);
+        transform: translateY(-1px);
+    }
+
+    /* ====================
+       PAGE HEADER & TYPOGRAPHY
+       ==================== */
+    .page-header {
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--color-border);
+        animation: fade-in-down 0.6s ease-out;
+    }
+    
+    .page-title {
+        font-size: 1.5rem; /* Sedikit lebih kecil agar lebih elegan */
+        font-weight: 800;
+        color: var(--color-text-main);
+        letter-spacing: -0.02em;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 0.5rem;
+    }
+    
+    /* Garis animasi di bawah judul halaman */
+    .page-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 24px;
+        height: 3px;
+        background: var(--color-brand-light);
+        border-radius: 99px;
+        transition: width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .page-header:hover .page-title::after {
+        width: 100%;
+        background: var(--color-brand);
+    }
+
+    .page-subtitle {
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+        margin-top: 0.375rem;
+    }
+
+    /* ====================
+       TABLES
+       ==================== */
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .data-table thead tr {
+        background: var(--color-bg-base);
+        border-bottom: 2px solid var(--color-border);
+    }
+    .data-table thead th {
+        padding: 1rem 1.25rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--color-text-muted);
+        text-align: left;
+    }
+    .data-table tbody tr {
+        border-bottom: 1px solid var(--color-border);
+        transition: all 0.2s ease;
+    }
+    .data-table tbody tr:hover {
+        background: var(--color-brand-soft);
+        transform: scale(1.002); /* Sedikit membesar saat disorot */
+    }
+    .data-table tbody td {
+        padding: 1.125rem 1.25rem;
+        font-size: 0.875rem;
+        color: var(--color-text-main);
+        vertical-align: middle;
+    }
+
+    /* ====================
+       BADGES
+       ==================== */
+    .badge-pending  { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+    .badge-active   { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+    .badge-info     { background: #f0f9ff; color: #0284c7; border: 1px solid #bae6fd; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+    .badge-danger   { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+
+    /* ====================
+       ALERTS
+       ==================== */
+    .alert-success {
+        background: #f0fdf4;
+        border-left: 4px solid #16a34a;
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        color: #15803d;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        box-shadow: 0 4px 12px rgba(22, 163, 74, 0.08);
+        animation: fade-in-down 0.4s ease-out;
+    }
+    .alert-error {
+        background: #fef2f2;
+        border-left: 4px solid #dc2626;
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        color: #b91c1c;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.08);
+        animation: fade-in-down 0.4s ease-out;
+    }
+}
+
+/* ============================================================
+   ANIMATIONS & KEYFRAMES
+   ============================================================ */
+@layer utilities {
+    @keyframes fade-in-down {
+        0% { opacity: 0; transform: translateY(-15px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-slide-in { 
+        animation: fade-in-down 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; 
+    }
+}
