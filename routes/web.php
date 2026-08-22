@@ -42,6 +42,7 @@ Route::get('/', [PublicController::class, 'index'])->name('home');
 // Keluhan Publik (Tanpa Login — Sistem OTP)
 Route::get('/keluhan', [PublicKeluhanController::class, 'create'])->name('public.keluhan.create');
 Route::get('/keluhan/get-pangkalans/{kecamatan_id}', [PublicKeluhanController::class, 'getPangkalans'])->name('public.keluhan.get-pangkalans');
+Route::get('/keluhan/get-desas/{kecamatan_id}', [PublicKeluhanController::class, 'getDesas'])->name('public.keluhan.get-desas');
 Route::post('/keluhan/otp-request', [PublicKeluhanController::class, 'requestOtp'])->name('public.keluhan.otp-request');
 Route::post('/keluhan/otp-verify', [PublicKeluhanController::class, 'verifyOtp'])->name('public.keluhan.otp-verify');
 Route::post('/keluhan', [PublicKeluhanController::class, 'store'])->name('public.keluhan.store');
@@ -183,9 +184,10 @@ Route::middleware(['auth', 'base_role:Pangkalan LPG'])->prefix('pangkalan')->nam
     Route::post('penyaluran', [PangkalanController::class, 'penyaluranStore'])->name('penyaluran.store');
 
     // Registrasi & Data Konsumen
-    Route::get('konsumen', [PangkalanController::class, 'konsumenIndex'])->name('konsumen.index');
-    Route::get('konsumen/create', [PangkalanController::class, 'konsumenCreate'])->name('konsumen.create');
-    Route::post('konsumen', [PangkalanController::class, 'konsumenStore'])->name('konsumen.store');
+    Route::get('/konsumen', [PangkalanController::class, 'konsumenIndex'])->name('konsumen.index');
+    Route::get('/konsumen/search', [PangkalanController::class, 'searchKonsumen'])->name('konsumen.search');
+    Route::get('/konsumen/create', [PangkalanController::class, 'konsumenCreate'])->name('konsumen.create');
+    Route::post('/konsumen', [PangkalanController::class, 'konsumenStore'])->name('konsumen.store');
 
     // Monitoring Stok
     Route::get('stok', [PangkalanController::class, 'sisaStok'])->name('stok');

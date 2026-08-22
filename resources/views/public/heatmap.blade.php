@@ -97,7 +97,7 @@
                     <span>{{ auth()->check() ? 'Kembali' : 'Beranda' }}</span>
                 </a>
                 <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-3">
-                    <i class="fa-solid fa-fire text-cyan-500"></i> Heatmap <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500">Kelangkaan</span>
+                    Heatmap <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500">Kelangkaan</span>
                 </h1>
                 <p class="text-xs text-slate-500 mt-1 hidden md:block">Distribusi intensitas kelangkaan per wilayah — GASKEUN Garut</p>
             </div>
@@ -124,9 +124,7 @@
                     </button>
                 </div>
 
-                <a href="{{ route('public.keluhan.create') }}" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-rose-500/30 text-white bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 whitespace-nowrap">
-                    <i class="fa-solid fa-bullhorn mr-2"></i> Lapor
-                </a>
+
             </div>
         </div>
 
@@ -144,9 +142,9 @@
 
             <div class="legend" id="map-legend">
                 <div style="font-weight: 700; color: #0F172A; margin-right: 8px;">Titik Kelangkaan</div>
-                <div class="legend-item"><div class="legend-dot" style="background: #EF4444;"></div> <span>Kritis</span></div>
-                <div class="legend-item"><div class="legend-dot" style="background: #F59E0B;"></div> <span>Waspada</span></div>
-                <div class="legend-item"><div class="legend-dot" style="background: #10B981;"></div> <span>Aman</span></div>
+                <div class="legend-item"><div class="legend-dot" ></div> <span>Kritis</span></div>
+                <div class="legend-item"><div class="legend-dot" ></div> <span>Waspada</span></div>
+                <div class="legend-item"><div class="legend-dot" ></div> <span>Aman</span></div>
             </div>
 
             <button id="btn-3d" class="terrain-toggle active" onclick="toggle3D()">

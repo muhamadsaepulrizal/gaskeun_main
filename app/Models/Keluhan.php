@@ -14,6 +14,7 @@ class Keluhan extends Model
         'kode_tiket',
         'user_id',
         'kecamatan_id',
+        'desa_id',
         'pangkalan_id',
         'jenis_aduan',
         'latitude',
@@ -55,5 +56,10 @@ class Keluhan extends Model
     public function pangkalan()
     {
         return $this->belongsTo(User::class, 'pangkalan_id');
+    }
+
+    public function desa()
+    {
+        return $this->belongsTo(Desa::class);
     }
 }

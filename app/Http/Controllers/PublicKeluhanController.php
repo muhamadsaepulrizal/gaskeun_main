@@ -31,6 +31,15 @@ class PublicKeluhanController extends Controller
         return response()->json($pangkalans);
     }
 
+    public function getDesas($kecamatan_id)
+    {
+        $desas = \App\Models\Desa::where('kecamatan_id', $kecamatan_id)
+            ->orderBy('nama_desa')
+            ->get(['id', 'nama_desa']);
+            
+        return response()->json($desas);
+    }
+
     public function requestOtp(Request $request)
     {
         $request->validate([
@@ -108,6 +117,7 @@ class PublicKeluhanController extends Controller
             'email' => 'required|email',
             'nama_pelapor' => 'required|string|max:255',
             'kecamatan_id' => 'required|exists:kecamatans,id',
+            'desa_id' => 'required|exists:desas,id',
             'pangkalan_id' => 'nullable|exists:users,id',
             'jenis_aduan' => 'required|string',
             'isi_keluhan' => 'required|string',
@@ -134,6 +144,7 @@ class PublicKeluhanController extends Controller
             'email_pelapor' => $request->email,
             'nama_pelapor' => $request->nama_pelapor,
             'kecamatan_id' => $request->kecamatan_id,
+            'desa_id' => $request->desa_id,
             'pangkalan_id' => $request->pangkalan_id,
             'jenis_aduan' => $request->jenis_aduan,
             'isi_keluhan' => $request->isi_keluhan,

@@ -4,7 +4,7 @@
 @section('content')
 <div class="p-6 lg:p-8 bg-slate-50 min-h-full">
     <!-- Header -->
-    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 flex-wrap">
         <div>
             <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Log Aktivitas Sistem</h1>
             <p class="text-sm text-slate-500 mt-1">Lacak dan pantau semua riwayat aktivitas dari semua pengguna dalam sistem GASKEUN.</p>
@@ -24,7 +24,7 @@
 
     <!-- Filter Form -->
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 mb-6">
-        <form method="GET" action="{{ route('superadmin.logs.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+        <form method="GET" action="{{ route('superadmin.logs.index') }}" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 items-end">
             <!-- Filter Tanggal Awal -->
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Tanggal Mulai</label>

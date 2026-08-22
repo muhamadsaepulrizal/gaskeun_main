@@ -8,7 +8,7 @@
 @section('content')
 
 <div class="flex justify-end mb-6">
-    <a href="{{ route('public.keluhan.status') }}" class="btn-secondary shrink-0">
+    <a href="{{ route('public.keluhan.status') }}" class="inline-flex justify-center items-center rounded-xl bg-white px-6 py-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-200 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 shrink-0">
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
         Kembali
     </a>

@@ -6,7 +6,7 @@
     <div class="mb-8">
         <p class="text-xs font-mono mb-3" style="color:#10B981; letter-spacing:0.1em;">// REGISTRASI BARU</p>
         <h2 style="font-size:2rem; font-weight:800; letter-spacing:-0.035em; color:#F1F5F9; line-height:1.15;">Buat Akun<br><span style="background:linear-gradient(135deg,#10B981,#06B6D4); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Masyarakat</span></h2>
-        <p class="mt-2 text-sm" style="color:#475569;">NIK Anda harus terdaftar dalam data kependudukan setempat.</p>
+        <p class="mt-2 text-sm" >NIK Anda harus terdaftar dalam data kependudukan setempat.</p>
     </div>
 
     <form method="POST" action="{{ route('register.post') }}" class="space-y-5">
@@ -21,11 +21,11 @@
                        placeholder="1234567890123456"
                        value="{{ old('nik') }}">
                 <div class="absolute right-3 top-1/2 -translate-y-1/2">
-                    <span class="text-xs" style="color:#334155;">16 digit</span>
+                    <span class="text-xs" >16 digit</span>
                 </div>
             </div>
             @error('nik')
-                <p class="mt-1.5 text-xs" style="color:#F43F5E;">{{ $message }}</p>
+                <p class="mt-1.5 text-xs" >{{ $message }}</p>
             @enderror
         </div>
 
@@ -36,7 +36,7 @@
                    placeholder="Nama sesuai KTP"
                    value="{{ old('name') }}">
             @error('name')
-                <p class="mt-1.5 text-xs" style="color:#F43F5E;">{{ $message }}</p>
+                <p class="mt-1.5 text-xs" >{{ $message }}</p>
             @enderror
         </div>
 
@@ -47,7 +47,7 @@
                        class="input-field"
                        placeholder="Min. 6 karakter">
                 @error('password')
-                    <p class="mt-1.5 text-xs" style="color:#F43F5E;">{{ $message }}</p>
+                    <p class="mt-1.5 text-xs" >{{ $message }}</p>
                 @enderror
             </div>
 
@@ -60,7 +60,7 @@
         </div>
 
         <div class="pt-1 p-3 rounded-xl text-xs" style="background:rgba(6,182,212,0.06); border:1px solid rgba(6,182,212,0.12); color:#64748B; line-height:1.6;">
-            <span style="color:#06B6D4; font-weight:600;">ⓘ Info:</span> NIK Anda akan divalidasi terhadap database kependudukan. Pastikan NIK sudah terdaftar melalui kantor Disperindag setempat.
+            <span >ⓘ Info:</span> NIK Anda akan divalidasi terhadap database kependudukan. Pastikan NIK sudah terdaftar melalui kantor Disperindag setempat.
         </div>
 
         <div class="pt-1">
@@ -73,9 +73,9 @@
 
     <div class="neon-divider mt-8"></div>
 
-    <p class="text-center text-sm mt-6" style="color:#334155;">
+    <p class="text-center text-sm mt-6" >
         Sudah punya akun?
-        <a href="{{ route('login') }}" style="color:#06B6D4; font-weight:600;"
+        <a href="{{ route('login') }}" 
            onmouseover="this.style.textDecoration='underline'"
            onmouseout="this.style.textDecoration='none'">
             Masuk di sini →

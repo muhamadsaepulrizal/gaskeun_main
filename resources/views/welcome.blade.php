@@ -254,13 +254,7 @@
                     <p class="text-sm text-slate-600 leading-relaxed">Pemantauan visual sebaran pangkalan dengan indikator warna status stok: aman, menipis, atau kosong.</p>
                 </div>
 
-                <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 hover:shadow-lg hover:shadow-teal-100 transition group" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-12 h-12 bg-teal-50 text-teal-500 rounded-lg flex items-center justify-center text-xl mb-6 group-hover:bg-gradient-to-br group-hover:from-teal-400 group-hover:to-teal-600 group-hover:text-white transition-all duration-300">
-                        <i class="fa-solid fa-fire"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-3">Heatmap Kelangkaan LPG</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">Analisis visual berbasis wilayah kecamatan untuk mendeteksi dini potensi kelangkaan pasokan gas.</p>
-                </div>
+
 
                 <div class="bg-white rounded-2xl p-8 shadow-sm border border-slate-100 hover:shadow-lg hover:shadow-teal-100 transition group" data-aos="fade-up" data-aos-delay="300">
                     <div class="w-12 h-12 bg-teal-50 text-teal-500 rounded-lg flex items-center justify-center text-xl mb-6 group-hover:bg-gradient-to-br group-hover:from-teal-400 group-hover:to-teal-600 group-hover:text-white transition-all duration-300">
@@ -363,7 +357,7 @@
                     </p>
                     <div class="flex gap-4 relative z-10">
                         <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-500 hover:text-white transition shadow-lg"><i class="fa-brands fa-facebook-f text-sm"></i></a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-500 hover:text-white transition shadow-lg"><i class="fa-brands fa-instagram text-sm"></i></a>
+                        <a href="https://www.instagram.com/disperindagesdm_garut?igsi=MW1zenFqeW5sMXJxYg==" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-500 hover:text-white transition shadow-lg"><i class="fa-brands fa-instagram text-sm"></i></a>
                         <a href="#" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-500 hover:text-white transition shadow-lg"><i class="fa-brands fa-twitter text-sm"></i></a>
                     </div>
                 </div>
@@ -376,9 +370,11 @@
                             <i class="fa-solid fa-building text-teal-500 mt-1"></i>
                             <span>Disperindag ESDM<br>Pemerintah Kabupaten Garut</span>
                         </li>
-                        <li class="flex items-center gap-3">
-                            <i class="fa-solid fa-location-dot text-teal-500"></i>
-                            <span>Jl. Pembangunan No.XX, Tarogong Kidul, Garut</span>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-location-dot text-teal-500 mt-1"></i>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Jalan+Merdeka+No.219,+Jayaraga,+Kecamatan+Tarogong+Kidul,+Kabupaten+Garut,+Jawa+Barat+44151" target="_blank" rel="noopener noreferrer" class="hover:text-teal-400 transition">
+                                Jalan Merdeka No.219, Jayaraga, Kecamatan Tarogong Kidul, Kabupaten Garut, Jawa Barat 44151
+                            </a>
                         </li>
                         <li class="flex items-center gap-3">
                             <i class="fa-solid fa-envelope text-teal-500"></i>
@@ -387,26 +383,6 @@
                     </ul>
                 </div>
 
-                <!-- Kolom 3: Link Cepat -->
-                <div class="md:col-span-3 lg:col-span-2" data-aos="fade-up" data-aos-delay="300">
-                    <h4 class="text-white font-bold mb-6 uppercase text-sm tracking-wider">Link Cepat</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li><a href="#beranda" class="hover:text-teal-400 transition">Beranda</a></li>
-                        <li><a href="#alur" class="hover:text-teal-400 transition">Alur Distribusi</a></li>
-                        <li><a href="#fitur" class="hover:text-teal-400 transition">Fitur Sistem</a></li>
-                    </ul>
-                </div>
-
-                <!-- Kolom 4: Bantuan & Legal -->
-                <div class="md:col-span-3 lg:col-span-2" data-aos="fade-up" data-aos-delay="400">
-                    <h4 class="text-white font-bold mb-6 uppercase text-sm tracking-wider">Bantuan & Legal</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li><a href="#" class="hover:text-teal-400 transition">Panduan Pengguna</a></li>
-                        <li><a href="#" class="hover:text-teal-400 transition">FAQ</a></li>
-                        <li><a href="#" class="hover:text-teal-400 transition">Kebijakan Privasi</a></li>
-                        <li><a href="#" class="hover:text-teal-400 transition">Syarat & Ketentuan</a></li>
-                    </ul>
-                </div>
             </div>
             
             <div class="pt-8 border-t border-slate-800/50 text-center text-sm flex flex-col md:flex-row justify-between items-center gap-4">

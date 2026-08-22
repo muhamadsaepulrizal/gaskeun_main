@@ -140,11 +140,11 @@
 
     </div>
 
-    <!-- 3. Grid Bawah (Log Aktivitas & Kartu Aksi Cepat) -->
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    <!-- 3. Grid Bawah (Log Aktivitas) -->
+    <div class="grid grid-cols-1 gap-6">
         
-        <!-- Log Aktivitas Terbaru (Porsi 2 Kolom) -->
-        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm xl:col-span-2">
+        <!-- Log Aktivitas Terbaru -->
+        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
             <h3 class="text-lg font-bold text-slate-800 mb-6">Log Aktivitas Terbaru</h3>
             
             <div class="space-y-6">
@@ -166,28 +166,7 @@
             </div>
         </div>
 
-        <!-- Kartu Aksi Cepat (Porsi 1 Kolom) -->
-        <div class="space-y-4">
-            
-            <!-- Tombol Lihat Peta GIS -->
-            <a href="{{ route('public.peta') }}" class="block bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:border-[#0B5240] hover:shadow-md transition-all group relative overflow-hidden">
-                <div class="flex justify-between items-center mb-3 relative z-10">
-                    <h3 class="text-lg font-bold text-slate-800 group-hover:text-[#0B5240] transition-colors">Lihat Peta GIS</h3>
-                    <i class="fa-solid fa-map text-3xl text-slate-200 group-hover:text-[#0B5240]/20 transition-colors"></i>
-                </div>
-                <p class="text-sm text-slate-500 relative z-10">Pantau distribusi secara spasial di seluruh wilayah.</p>
-            </a>
-            
-            <!-- Tombol Lihat Heatmap -->
-            <a href="{{ route('public.heatmap') }}" class="block bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:border-[#0B5240] hover:shadow-md transition-all group relative overflow-hidden">
-                <div class="flex justify-between items-center mb-3 relative z-10">
-                    <h3 class="text-lg font-bold text-slate-800 group-hover:text-[#0B5240] transition-colors">Lihat Heatmap Kelangkaan</h3>
-                    <i class="fa-solid fa-map-location-dot text-3xl text-slate-200 group-hover:text-[#0B5240]/20 transition-colors"></i>
-                </div>
-                <p class="text-sm text-slate-500 relative z-10">Identifikasi titik krisis pasokan gas secara realtime.</p>
-            </a>
 
-        </div>
     </div>
 </div>
 

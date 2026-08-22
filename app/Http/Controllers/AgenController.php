@@ -126,7 +126,7 @@ class AgenController extends Controller
             'jumlah_tabung'      => $request->jumlah_tabung,
             'tanggal_pengiriman' => $request->tanggal_pengiriman,
             'foto_bukti'         => $fotoPath,
-            'status'             => 'Dikirim', // Status awal MUTLAK (bukan 'Menunggu')
+            'status'             => 'Menunggu', // Status awal harus Menunggu sesuai ENUM DB
         ]);
 
         activity()->performedOn($pengiriman)->log("Pengiriman dibuat: {$request->jumlah_tabung} tabung ke pangkalan #{$request->pangkalan_id}");
@@ -185,7 +185,7 @@ class AgenController extends Controller
                         'pangkalan_id'       => $pangkalanId,
                         'jumlah_tabung'      => $jumlah,
                         'tanggal_pengiriman' => $tanggal,
-                        'status'             => 'Dikirim',
+                        'status'             => 'Menunggu',
                     ]);
 
                     $imported++;

@@ -63,8 +63,8 @@ class PangkalanController extends Controller
             abort(403);
         }
 
-        // BR-06: Blokir jika status bukan 'Dikirim'
-        if ($pengiriman->status !== 'Dikirim') {
+        // BR-06: Blokir jika status bukan 'Menunggu'
+        if ($pengiriman->status !== 'Menunggu') {
             return redirect()->back()->with('error', 'Pengiriman ini sudah diproses sebelumnya.');
         }
 
@@ -97,8 +97,8 @@ class PangkalanController extends Controller
             abort(403);
         }
 
-        // BR-06: Hanya bisa koreksi jika status 'Dikirim'
-        if ($pengiriman->status !== 'Dikirim') {
+        // BR-06: Hanya bisa koreksi jika status 'Menunggu'
+        if ($pengiriman->status !== 'Menunggu') {
             return redirect()->back()->with('error', 'Pengiriman ini sudah diproses sebelumnya.');
         }
 
@@ -152,56 +152,99 @@ class PangkalanController extends Controller
 
     public function konsumenStore(Request $request)
     {
+        $kategori = $request->kategori;
         $rules = [
-            'kategori'     => 'required|in:Rumah Tangga,Usaha Mikro,Petani,Nelayan',
+            'kategori'     => 'required|in:Rumah Tangga,Usaha Mikro,Petani Sasaran,Nelayan Sasaran',
             'nama_lengkap' => 'required|string|max:255',
-            'alamat'       => 'nullable|string|max:500',
-            'kontak'       => 'nullable|string|max:20',
         ];
 
-        // Validasi dokumen berdasarkan kategori (BR-19, BR-20)
-        if ($request->kategori === 'Rumah Tangga') {
+        // Validasi dan mapping dokumen berdasarkan kategori
+        if ($kategori === 'Rumah Tangga') {
             $rules['nik'] = ['required', 'string', 'digits:16'];
-        }
-        if ($request->kategori === 'Usaha Mikro') {
+            $rules['desa'] = ['required', 'string', 'max:500'];
+        } elseif ($kategori === 'Usaha Mikro') {
             $rules['nib'] = ['required', 'string'];
+            $rules['jenis_usaha'] = ['required', 'string', 'max:500'];
+        } elseif ($kategori === 'Petani Sasaran') {
+            $rules['nik'] = ['required', 'string', 'digits:16'];
+            $rules['kelompok_tani'] = ['required', 'string', 'max:500'];
+        } elseif ($kategori === 'Nelayan Sasaran') {
+            $rules['nik'] = ['required', 'string', 'digits:16'];
+            $rules['kapal'] = ['required', 'string', 'max:500'];
         }
 
         $request->validate($rules, [
-            'nik.required' => 'NIK wajib diisi untuk kategori Rumah Tangga.',
+            'nik.required' => 'NIK wajib diisi.',
             'nik.digits'   => 'NIK harus 16 digit angka.',
-            'nib.required' => 'NIB wajib diisi untuk kategori Usaha Mikro.',
+            'nib.required' => 'NIB wajib diisi.',
         ]);
 
-        // BR-19: Validasi unik global NIK/NIB lintas pangkalan
+        // Validasi unik global NIK/NIB lintas pangkalan
         if ($request->filled('nik') && Konsumen::nikSudahTerdaftar($request->nik)) {
-            return back()->withErrors(['nik' => 'NIK ini sudah terdaftar di pangkalan lain. Tidak bisa didaftarkan ulang.'])->withInput();
+            return back()->withErrors(['nik' => 'NIK ini sudah terdaftar.'])->withInput();
         }
         if ($request->filled('nib') && Konsumen::nibSudahTerdaftar($request->nib)) {
-            return back()->withErrors(['nib' => 'NIB ini sudah terdaftar di pangkalan lain. Tidak bisa didaftarkan ulang.'])->withInput();
+            return back()->withErrors(['nib' => 'NIB ini sudah terdaftar.'])->withInput();
         }
 
-        // BR-20: Enkripsi NIK/NIB sebelum simpan
+        // Tentukan data tambahan yang disimpan di kolom alamat
+        $alamat = null;
+        if ($kategori === 'Rumah Tangga') $alamat = $request->desa;
+        if ($kategori === 'Usaha Mikro') $alamat = $request->jenis_usaha;
+        if ($kategori === 'Petani Sasaran') $alamat = $request->kelompok_tani;
+        if ($kategori === 'Nelayan Sasaran') $alamat = $request->kapal;
+
+        // Enkripsi NIK/NIB sebelum simpan
         $konsumen = Konsumen::create([
             'pangkalan_id' => Auth::id(),
-            'kategori'     => $request->kategori,
+            'kategori'     => $kategori,
             'nama_lengkap' => $request->nama_lengkap,
-            'alamat'       => $request->alamat,
-            'kontak'       => $request->kontak,
+            'alamat'       => $alamat,
         ]);
 
-        // Gunakan setter untuk enkripsi otomatis
         if ($request->filled('nik')) {
             $konsumen->setNikAttribute($request->nik);
-            $konsumen->save();
         }
         if ($request->filled('nib')) {
             $konsumen->setNibAttribute($request->nib);
-            $konsumen->save();
         }
+        $konsumen->save();
 
         return redirect()->route('pangkalan.konsumen.index')
             ->with('success', 'Konsumen berhasil diregistrasikan.');
+    }
+
+    public function searchKonsumen(Request $request)
+    {
+        $kategori = $request->get('kategori');
+        $keyword = $request->get('q');
+        
+        if (!$kategori || empty(trim($keyword))) {
+            return response()->json([]);
+        }
+
+        $query = Konsumen::where('pangkalan_id', Auth::id())
+            ->where('kategori', $kategori);
+
+        $hashKeyword = hash('sha256', $keyword);
+
+        $query->where(function($q) use ($keyword, $hashKeyword) {
+            $q->where('nama_lengkap', 'like', "%{$keyword}%")
+              ->orWhere('nik_hash', $hashKeyword)
+              ->orWhere('nib_hash', $hashKeyword);
+        });
+
+        $konsumens = $query->limit(10)->get()->map(function($k) {
+            $identifier = $k->kategori === 'Usaha Mikro' ? $k->nib : $k->nik;
+            return [
+                'id' => $k->id,
+                'nama' => $k->nama_lengkap,
+                'identifier' => $identifier ? substr($identifier, 0, 6) . str_repeat('*', max(0, strlen($identifier) - 6)) : '-',
+                'alamat' => $k->alamat
+            ];
+        });
+
+        return response()->json($konsumens);
     }
 
     // ============================================================
@@ -218,11 +261,8 @@ class PangkalanController extends Controller
     public function penyaluranStore(Request $request)
     {
         $request->validate([
-            'kategori_konsumen' => 'required|in:Rumah Tangga,Usaha Mikro,Petani,Nelayan',
-            'nik'               => 'required|string',
-            'nama_lengkap'      => 'required|string|max:255',
-            'jumlah_tabung'     => 'required|integer|min:1',
-            'nomor_kartu'       => 'nullable|string', // Untuk NIB, Kartu Tani, Kartu Kusuka
+            'konsumen_id'   => 'required|exists:konsumens,id',
+            'jumlah_tabung' => 'required|integer|min:1',
         ]);
 
         $stok = StokPangkalan::where('user_id', Auth::id())->first();
@@ -237,23 +277,8 @@ class PangkalanController extends Controller
         }
 
         DB::transaction(function () use ($request, $stok) {
-            // Cek apakah konsumen sudah ada berdasarkan NIK (simulasi, seharusnya by hash)
-            $konsumen = Konsumen::where('nik_hash', hash('sha256', $request->nik))->first();
+            $konsumen = Konsumen::findOrFail($request->konsumen_id);
             
-            if (!$konsumen) {
-                // Buat konsumen baru
-                $konsumen = Konsumen::create([
-                    'pangkalan_id' => Auth::id(),
-                    'kategori'     => $request->kategori_konsumen,
-                    'nama_lengkap' => $request->nama_lengkap,
-                ]);
-                $konsumen->setNikAttribute($request->nik);
-                if ($request->nomor_kartu && $request->kategori_konsumen === 'Usaha Mikro') {
-                    $konsumen->setNibAttribute($request->nomor_kartu);
-                }
-                $konsumen->save();
-            }
-
             // BR-18: Deteksi anomali — warga beli di luar pangkalan pendaftaran
             $isAnomali = $konsumen->pangkalan_id !== Auth::id();
             if ($isAnomali) {
@@ -275,8 +300,8 @@ class PangkalanController extends Controller
                 ($isAnomali ? ' [ANOMALI: beli di luar pangkalan asal]' : ''));
         });
 
-        return redirect()->route('pangkalan.stok')
-            ->with('success', "Penyaluran {$request->jumlah_tabung} tabung berhasil. Stok dikurangi otomatis.");
+        return redirect()->route('pangkalan.penyaluran.create')
+            ->with('success', "Transaksi berhasil. Stok dipotong otomatis.");
     }
 
     // ============================================================

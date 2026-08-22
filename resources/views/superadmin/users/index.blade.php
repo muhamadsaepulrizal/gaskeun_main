@@ -26,8 +26,8 @@
         
         <!-- Toolbar / Filters — Terhubung ke DB -->
         <form method="GET" action="{{ route('superadmin.users.index') }}">
-        <div class="p-5 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div class="flex flex-col sm:flex-row gap-3 flex-1">
+        <div class="p-5 border-b border-slate-200 flex flex-col xl:flex-row xl:items-center justify-between gap-4 flex-wrap">
+            <div class="flex flex-col sm:flex-row gap-3 flex-1 flex-wrap">
                 <!-- Search -->
                 <div class="relative w-full sm:w-64">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -61,7 +61,7 @@
                 @endif
             </div>
             
-            <div class="flex gap-2">
+            <div class="flex gap-2 flex-wrap">
                 <button type="submit" class="shrink-0 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg px-4 py-2 text-sm font-semibold transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-magnifying-glass"></i> Cari
                 </button>

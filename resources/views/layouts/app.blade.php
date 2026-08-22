@@ -73,11 +73,17 @@
             <p class="text-white/70 text-xs font-medium">{{ auth()->user()->roles->first()->name ?? 'User' }}</p>
         </div>
 
+        
         <!-- Nav Items -->
+        @php
+            $activeClass = 'text-white bg-white/10 border-l-4 border-teal-400';
+            $inactiveClass = 'text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20';
+        @endphp
+
         <nav class="flex-1 overflow-y-auto sidebar-scroll py-6 px-4 space-y-1">
 
             <!-- Dashboard -->
-            <a href="/dashboard" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white bg-white/10 border-l-4 border-teal-400">
+            <a href="/dashboard" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->is('dashboard') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-border-all w-5 text-center"></i>
                 Dashboard
             </a>
@@ -87,15 +93,15 @@
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Manajemen Sistem</p>
             </div>
-            <a href="{{ route('superadmin.users.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('superadmin.users.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('superadmin.users.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-users-gear w-5 text-center"></i>
                 Kelola User
             </a>
-            <a href="{{ route('superadmin.roles.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('superadmin.roles.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('superadmin.roles.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-sliders w-5 text-center"></i>
                 Role & Hak Akses
             </a>
-            <a href="{{ route('superadmin.logs.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('superadmin.logs.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('superadmin.logs.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-clock-rotate-left w-5 text-center"></i>
                 Log Aktivitas
             </a>
@@ -104,11 +110,11 @@
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Pemetaan & Analisis</p>
             </div>
-            <a href="{{ route('public.peta') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('public.peta') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.peta') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-map w-5 text-center"></i>
                 Peta GIS Pangkalan
             </a>
-            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.heatmap') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-fire w-5 text-center"></i>
                 Heatmap Kelangkaan
             </a>
@@ -119,41 +125,41 @@
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Master Data</p>
             </div>
-            <a href="{{ route('disperindag.kecamatans.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('disperindag.kecamatans.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.kecamatans.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-map-location w-5 text-center"></i> Kecamatan
             </a>
-            <a href="{{ route('disperindag.desas.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('disperindag.desas.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.desas.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-map-pin w-5 text-center"></i> Desa / Kelurahan
             </a>
-            <a href="{{ route('disperindag.kks.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('disperindag.kks.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.kks.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-id-card w-5 text-center"></i> Kartu Keluarga
             </a>
-            <a href="{{ route('disperindag.penduduks.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('disperindag.penduduks.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.penduduks.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-users w-5 text-center"></i> Penduduk
             </a>
-            <a href="{{ route('disperindag.nelayans.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('disperindag.nelayans.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.nelayans.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-ship w-5 text-center"></i> Nelayan
             </a>
-            <a href="{{ route('disperindag.petanis.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('disperindag.petanis.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.petanis.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-tractor w-5 text-center"></i> Petani
             </a>
-            <a href="{{ route('disperindag.umkms.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('disperindag.umkms.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.umkms.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-store w-5 text-center"></i> UMKM
             </a>
-            <a href="{{ route('disperindag.rts.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('disperindag.rts.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.rts.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-house-chimney-user w-5 text-center"></i> RTS
             </a>
             
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Layanan & Pemetaan</p>
             </div>
-            <a href="{{ route('disperindag.keluhan.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('disperindag.keluhan.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.keluhan.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-comments w-5 text-center"></i> Kelola Keluhan
             </a>
-            <a href="{{ route('public.peta') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('public.peta') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.peta') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-map w-5 text-center"></i> Peta GIS Pangkalan
             </a>
-            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.heatmap') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-fire w-5 text-center"></i> Heatmap Kelangkaan
             </a>
             @endrole
@@ -163,26 +169,26 @@
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Distribusi</p>
             </div>
-            <a href="{{ route('agen.dashboard') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('agen.dashboard') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('agen.dashboard') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-border-all w-5 text-center"></i> Dashboard
             </a>
-            <a href="{{ route('agen.pangkalan-binaan.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('agen.pangkalan-binaan.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('agen.pangkalan-binaan.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-store w-5 text-center"></i> Pangkalan Binaan
             </a>
-            <a href="{{ route('agen.pengiriman.create') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('agen.pengiriman.create') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('agen.pengiriman.create') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-truck-ramp-box w-5 text-center"></i> Input Pengiriman
             </a>
-            <a href="{{ route('agen.pengiriman.status') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('agen.pengiriman.status') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('agen.pengiriman.status') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-clipboard-check w-5 text-center"></i> Status Pengiriman
             </a>
-            <a href="{{ route('agen.profil') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('agen.profil') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('agen.profil') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-building-user w-5 text-center"></i> Profil Agen
             </a>
             
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Pemetaan</p>
             </div>
-            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.heatmap') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-fire w-5 text-center"></i> Heatmap Kelangkaan
             </a>
             @endrole
@@ -192,30 +198,30 @@
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Stok & Distribusi</p>
             </div>
-            <a href="{{ route('pangkalan.pengiriman.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('pangkalan.pengiriman.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('pangkalan.pengiriman.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-box-open w-5 text-center"></i> Terima LPG
             </a>
-            <a href="{{ route('pangkalan.penyaluran.create') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('pangkalan.penyaluran.create') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('pangkalan.penyaluran.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-hand-holding-hand w-5 text-center"></i> Salurkan LPG
             </a>
-            <a href="{{ route('pangkalan.stok') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('pangkalan.stok') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('pangkalan.stok') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-chart-pie w-5 text-center"></i> Monitoring Stok
             </a>
 
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Data Konsumen</p>
             </div>
-            <a href="{{ route('pangkalan.konsumen.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('pangkalan.konsumen.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('pangkalan.konsumen.index') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-users w-5 text-center"></i> Data Konsumen
             </a>
-            <a href="{{ route('pangkalan.konsumen.create') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('pangkalan.konsumen.create') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('pangkalan.konsumen.create') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-user-plus w-5 text-center"></i> Registrasi Konsumen
             </a>
             
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Pemetaan</p>
             </div>
-            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.heatmap') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-fire w-5 text-center"></i> Heatmap Kelangkaan
             </a>
             @endrole
@@ -225,10 +231,10 @@
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Pengawasan Eksekutif</p>
             </div>
-            <a href="{{ route('public.peta') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('public.peta') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.peta') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-map-location-dot w-5 text-center"></i> Peta GIS Pangkalan
             </a>
-            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.heatmap') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-fire w-5 text-center"></i> Heatmap Kelangkaan
             </a>
             @endrole
@@ -238,13 +244,13 @@
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Layanan Publik</p>
             </div>
-            <a href="{{ route('public.peta') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('public.peta') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.peta') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-map-location-dot w-5 text-center"></i> Peta Pangkalan
             </a>
-            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.heatmap') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-fire w-5 text-center"></i> Heatmap Kelangkaan
             </a>
-            <a href="{{ route('public.keluhan.create') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-white/70 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20">
+            <a href="{{ route('public.keluhan.create') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.keluhan.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-comment-medical w-5 text-center"></i> Kirim Keluhan
             </a>
             @endrole

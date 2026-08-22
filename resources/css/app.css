@@ -25,6 +25,22 @@
     --color-border: rgba(226, 232, 240, 0.8);
 }
 
+/* Define explicit CSS variables for custom CSS classes */
+:root {
+    --color-brand: #0B5240;
+    --color-brand-light: #14765C;
+    --color-brand-dark: #052b21;
+    --color-brand-soft: #e6f2ef;
+    
+    --color-bg-base: #f4f7f6; 
+    --color-bg-card: #ffffff;
+    
+    --color-text-main: #1e293b;
+    --color-text-muted: #64748b;
+    
+    --color-border: rgba(226, 232, 240, 0.8);
+}
+
 @layer base {
     html { scroll-behavior: smooth; }
     
@@ -68,110 +84,152 @@
     }
 
     /* ====================
-       BUTTONS (MICRO-ANIMATED)
+       BUTTONS (MODERN TAILWIND UI STYLE)
        ==================== */
     .btn-primary {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 0.75rem 1.75rem;
-        background: linear-gradient(135deg, var(--color-brand), var(--color-brand-light));
-        color: white;
-        font-weight: 600;
-        font-size: 0.9rem;
-        border-radius: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        background-color: #0B5240; /* brand color */
+        color: #ffffff !important;
+        font-weight: 700;
+        font-size: 0.875rem;
+        border-radius: 0.75rem; /* rounded-xl */
         border: none;
-        box-shadow: 0 4px 12px rgba(11, 82, 64, 0.2);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    /* Kilau (Glow) efek saat di-hover */
-    .btn-primary::after {
-        content: '';
-        position: absolute;
-        top: 0; left: -100%; width: 100%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-        transition: all 0.6s ease;
-    }
-    .btn-primary:hover::after {
-        left: 100%;
+        box-shadow: 0 4px 6px -1px rgba(11, 82, 64, 0.1), 0 2px 4px -1px rgba(11, 82, 64, 0.06);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
     }
     .btn-primary:hover {
+        background-color: #14765C; /* brand light */
+        box-shadow: 0 10px 15px -3px rgba(11, 82, 64, 0.2), 0 4px 6px -2px rgba(11, 82, 64, 0.1);
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(11, 82, 64, 0.35);
     }
-    .btn-primary:active {
-        transform: translateY(1px) scale(0.96);
-        box-shadow: 0 2px 8px rgba(11, 82, 64, 0.2);
+    .btn-primary:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(20, 118, 92, 0.2);
     }
 
     .btn-secondary {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 0.75rem 1.75rem;
-        background: #ffffff;
-        color: var(--color-text-main);
-        font-weight: 600;
-        font-size: 0.9rem;
+        padding: 0.75rem 1.5rem;
+        background-color: #ffffff;
+        color: #334155 !important; /* slate-700 */
+        font-weight: 700;
+        font-size: 0.875rem;
         border-radius: 0.75rem;
-        border: 1px solid #cbd5e1;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        box-shadow: inset 0 0 0 1px #e2e8f0, 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
     }
     .btn-secondary:hover {
-        background: var(--color-brand-soft);
-        color: var(--color-brand);
-        border-color: var(--color-brand-light);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(11, 82, 64, 0.08);
+        background-color: #f8fafc; /* slate-50 */
+        color: #0f172a !important; /* slate-900 */
+        box-shadow: inset 0 0 0 1px #cbd5e1, 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        transform: translateY(-1px);
     }
-    .btn-secondary:active {
-        transform: translateY(1px) scale(0.96);
+
+    .btn-edit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem !important;
+        background: #f0f9ff;
+        color: #0369a1;
+        font-weight: 600;
+        font-size: 0.8125rem;
+        border-radius: 0.5rem;
+        border: 1px solid #bae6fd;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    .btn-edit:hover {
+        background: #e0f2fe;
+        color: #0284c7;
+        border-color: #7dd3fc;
+        transform: translateY(-1px);
+    }
+
+    .btn-danger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem !important;
+        background: #fef2f2;
+        color: #dc2626;
+        font-weight: 600;
+        font-size: 0.8125rem;
+        border-radius: 0.5rem;
+        border: 1px solid #fecaca;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    .btn-danger:hover {
+        background: #fee2e2;
+        color: #b91c1c;
+        border-color: #fca5a5;
+        transform: translateY(-1px);
     }
 
     /* ====================
-       FORM INPUTS (INTERACTIVE FOCUS)
+       FORM INPUTS (TAILWIND UI STYLE MODERNIZED)
        ==================== */
     .label-field {
         display: block;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: var(--color-text-muted);
+        font-size: 0.875rem;
+        font-weight: 600;
+        line-height: 1.25rem;
+        color: #334155; /* slate-700 */
         margin-bottom: 0.5rem;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        transition: color 0.3s ease;
+        transition: color 0.2s ease;
     }
-    
-    /* Ganti warna label saat input di dalamnya sedang fokus */
-    div:has(.input-field:focus) .label-field,
-    div:has(.select-field:focus) .label-field {
-        color: var(--color-brand-light);
+
+    .input-wrapper:focus-within .label-field {
+        color: var(--color-brand);
     }
 
     .input-field, .select-field {
+        display: block;
         width: 100%;
-        padding: 0.875rem 1.25rem;
-        background: #f8fafc; /* Warna sedikit abu agar beda dari card */
-        border: 1px solid var(--color-border);
-        border-radius: 0.75rem;
-        color: var(--color-text-main);
-        font-size: 0.9rem;
-        font-family: var(--font-sans);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        outline: none;
+        padding: 0.75rem 1rem; /* More generous padding */
+        background-color: #f8fafc; /* slate-50 */
+        color: #1e293b; /* slate-800 */
+        font-size: 0.875rem;
+        line-height: 1.5rem;
+        border-radius: 0.75rem; /* rounded-xl */
+        border: 0;
+        box-shadow: inset 0 0 0 1px #e2e8f0; /* slate-200 */
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        appearance: none;
+        -webkit-appearance: none;
     }
+    
+    .select-field {
+        padding-right: 2.75rem;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+    }
+    
     .input-field:hover, .select-field:hover {
-        background: #ffffff;
-        border-color: #cbd5e1;
+        box-shadow: inset 0 0 0 1px #cbd5e1; /* slate-300 */
+        background-color: #ffffff;
     }
+    
     .input-field:focus, .select-field:focus {
-        background: #ffffff;
-        border-color: var(--color-brand-light);
-        box-shadow: 0 0 0 4px var(--color-brand-soft), 0 4px 12px rgba(0,0,0,0.03);
-        transform: translateY(-1px);
+        outline: none;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(20, 118, 92, 0.1), inset 0 0 0 1.5px var(--color-brand);
+    }
+    
+    .input-field::placeholder, .select-field::placeholder {
+        color: #94a3b8; /* slate-400 */
+        opacity: 1;
     }
 
     /* ====================
@@ -242,8 +300,7 @@
         transition: all 0.2s ease;
     }
     .data-table tbody tr:hover {
-        background: var(--color-brand-soft);
-        transform: scale(1.002); /* Sedikit membesar saat disorot */
+        background: #f8fafc; /* Subtle hover color */
     }
     .data-table tbody td {
         padding: 1.125rem 1.25rem;

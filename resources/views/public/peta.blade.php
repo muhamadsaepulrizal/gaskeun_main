@@ -83,7 +83,7 @@
                     <span>{{ auth()->check() ? 'Kembali' : 'Beranda' }}</span>
                 </a>
                 <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 flex items-center gap-3">
-                    <i class="fa-solid fa-map-location-dot text-teal-500"></i> Peta <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-emerald-500">Pangkalan</span>
+                    Peta <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-emerald-500">Pangkalan</span>
                 </h1>
             </div>
             
@@ -99,10 +99,6 @@
                         <i class="fa-solid fa-chevron-down text-xs"></i>
                     </div>
                 </div>
-                
-                <a href="{{ route('public.keluhan.create') }}" class="inline-flex items-center justify-center px-6 py-2.5 rounded-xl text-sm font-bold transition-all transform hover:-translate-y-0.5 shadow-lg shadow-rose-500/30 text-white bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700">
-                    <i class="fa-solid fa-bullhorn mr-2"></i> Laporkan Kelangkaan
-                </a>
             </div>
         </div>
     </div>

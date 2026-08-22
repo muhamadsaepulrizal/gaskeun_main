@@ -40,8 +40,8 @@
             </div>
 
             <div class="pt-6 mt-2 flex justify-end gap-3 border-t border-slate-100">
-                <a href="{{ route('agen.dashboard') }}" class="btn-secondary">Batal</a>
-                <button type="submit" class="btn-primary">
+                <a href="{{ route('agen.dashboard') }}" class="inline-flex justify-center items-center rounded-xl bg-white px-6 py-3 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-200 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200">Batal</a>
+                <button type="submit" class="inline-flex justify-center items-center rounded-xl bg-brand px-6 py-3 text-sm font-bold text-white shadow-md hover:bg-[#0B5240] hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-brand/30 transition-all duration-200 transform hover:-translate-y-0.5">
                     <i class="fa-solid fa-check mr-2"></i> Simpan Profil
                 </button>
             </div>

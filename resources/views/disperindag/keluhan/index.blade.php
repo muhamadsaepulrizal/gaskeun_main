@@ -59,8 +59,8 @@
                                 <p class="text-xs mt-3 leading-relaxed text-slate-500 line-clamp-2 max-w-[200px] border-t border-slate-100 pt-2"><span class="font-semibold text-slate-700">Tindak Lanjut:</span> {{ $k->tindak_lanjut }}</p>
                             @endif
                         </td>
-                        <td class="px-6 py-5 text-right">
-                            <a href="{{ route('disperindag.keluhan.show', $k->id) }}" class="inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-white bg-brand hover:bg-[#0B5240] transition rounded-lg shadow-sm gap-2">
+                        <td class="px-6 py-5 text-right whitespace-nowrap">
+                            <a href="{{ route('disperindag.keluhan.show', $k->id) }}" class="inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-white bg-brand hover:bg-[#0B5240] transition rounded-lg shadow-sm gap-2 whitespace-nowrap">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Tindak Lanjuti
                             </a>
                         </td>
