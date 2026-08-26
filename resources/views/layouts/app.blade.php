@@ -131,23 +131,8 @@
             <a href="{{ route('disperindag.desas.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.desas.*') ? $activeClass : $inactiveClass }}">
                 <i class="fa-solid fa-map-pin w-5 text-center"></i> Desa / Kelurahan
             </a>
-            <a href="{{ route('disperindag.kks.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.kks.*') ? $activeClass : $inactiveClass }}">
-                <i class="fa-solid fa-id-card w-5 text-center"></i> Kartu Keluarga
-            </a>
-            <a href="{{ route('disperindag.penduduks.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.penduduks.*') ? $activeClass : $inactiveClass }}">
-                <i class="fa-solid fa-users w-5 text-center"></i> Penduduk
-            </a>
-            <a href="{{ route('disperindag.nelayans.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.nelayans.*') ? $activeClass : $inactiveClass }}">
-                <i class="fa-solid fa-ship w-5 text-center"></i> Nelayan
-            </a>
-            <a href="{{ route('disperindag.petanis.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.petanis.*') ? $activeClass : $inactiveClass }}">
-                <i class="fa-solid fa-tractor w-5 text-center"></i> Petani
-            </a>
-            <a href="{{ route('disperindag.umkms.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.umkms.*') ? $activeClass : $inactiveClass }}">
-                <i class="fa-solid fa-store w-5 text-center"></i> UMKM
-            </a>
-            <a href="{{ route('disperindag.rts.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.rts.*') ? $activeClass : $inactiveClass }}">
-                <i class="fa-solid fa-house-chimney-user w-5 text-center"></i> RTS
+            <a href="{{ route('disperindag.konsumens.index') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('disperindag.konsumens.*') ? $activeClass : $inactiveClass }}">
+                <i class="fa-solid fa-users w-5 text-center"></i> Data Konsumen
             </a>
             
             <div class="pt-4 pb-2 px-4">
@@ -188,8 +173,8 @@
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Pemetaan</p>
             </div>
-            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.heatmap') ? $activeClass : $inactiveClass }}">
-                <i class="fa-solid fa-fire w-5 text-center"></i> Heatmap Kelangkaan
+            <a href="{{ route('public.peta') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.peta') ? $activeClass : $inactiveClass }}">
+                <i class="fa-solid fa-map-location-dot w-5 text-center"></i> Peta Pangkalan
             </a>
             @endrole
 
@@ -221,8 +206,8 @@
             <div class="pt-4 pb-2 px-4">
                 <p class="text-[10px] uppercase font-bold tracking-wider text-white/50">Pemetaan</p>
             </div>
-            <a href="{{ route('public.heatmap') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.heatmap') ? $activeClass : $inactiveClass }}">
-                <i class="fa-solid fa-fire w-5 text-center"></i> Heatmap Kelangkaan
+            <a href="{{ route('public.peta') }}" class="flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-medium transition-colors {{ request()->routeIs('public.peta') ? $activeClass : $inactiveClass }}">
+                <i class="fa-solid fa-map-location-dot w-5 text-center"></i> Peta Pangkalan
             </a>
             @endrole
 

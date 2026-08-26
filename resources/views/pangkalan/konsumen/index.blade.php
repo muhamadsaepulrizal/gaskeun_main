@@ -48,6 +48,7 @@
                         <th class="py-4 px-6 font-semibold text-slate-600 text-xs tracking-wider uppercase">Kategori</th>
                         <th class="py-4 px-6 font-semibold text-slate-600 text-xs tracking-wider uppercase">Kontak</th>
                         <th class="py-4 px-6 font-semibold text-slate-600 text-xs tracking-wider uppercase">Status</th>
+                        <th class="py-4 px-6 font-semibold text-slate-600 text-xs tracking-wider uppercase">Pangkalan</th>
                         <th class="py-4 px-6 font-semibold text-slate-600 text-xs tracking-wider uppercase">Terdaftar</th>
                     </tr>
                 </thead>
@@ -78,11 +79,14 @@
                             <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">Normal</span>
                             @endif
                         </td>
+                        <td class="py-4 px-6 text-slate-500">
+                            {{ $k->pangkalan->pangkalanProfile->nama_pangkalan ?? ($k->pangkalan->name ?? '-') }}
+                        </td>
                         <td class="py-4 px-6 text-slate-500 text-xs">{{ $k->created_at->format('d M Y') }}</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center py-12 text-slate-500">
+                        <td colspan="7" class="text-center py-12 text-slate-500">
                             <i class="fa-solid fa-users-slash text-3xl mb-3 opacity-30 block"></i>
                             Belum ada konsumen terdaftar. Mulai registrasi sekarang.
                         </td>

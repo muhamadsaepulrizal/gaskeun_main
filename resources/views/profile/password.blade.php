@@ -32,41 +32,53 @@
                 @csrf
                 @method('PUT')
 
-                <div class="group">
+                <div class="group" x-data="{ show: false }">
                     <label class="block text-sm font-semibold text-slate-700 mb-2 group-focus-within:text-brand transition-colors">Password Saat Ini</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 group-focus-within:text-brand transition-colors">
                             <i class="fa-solid fa-unlock-keyhole"></i>
                         </span>
-                        <input type="password" name="current_password" required autofocus
-                            class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:ring-4 focus:ring-brand/10 focus:border-brand transition-all duration-300 placeholder:text-slate-400" 
+                        <input :type="show ? 'text' : 'password'" name="current_password" required autofocus
+                            class="w-full pl-11 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:ring-4 focus:ring-brand/10 focus:border-brand transition-all duration-300 placeholder:text-slate-400" 
                             placeholder="Masukkan password Anda saat ini">
+                        <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-brand focus:outline-none transition-colors">
+                            <i class="fa-regular fa-eye" x-show="!show"></i>
+                            <i class="fa-regular fa-eye-slash" x-show="show" x-cloak></i>
+                        </button>
                     </div>
                 </div>
 
                 <div class="pt-2"></div>
 
-                <div class="group">
+                <div class="group" x-data="{ show: false }">
                     <label class="block text-sm font-semibold text-slate-700 mb-2 group-focus-within:text-brand transition-colors">Password Baru</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 group-focus-within:text-brand transition-colors">
                             <i class="fa-solid fa-lock"></i>
                         </span>
-                        <input type="password" name="password" required minlength="8"
-                            class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:ring-4 focus:ring-brand/10 focus:border-brand transition-all duration-300 placeholder:text-slate-400" 
+                        <input :type="show ? 'text' : 'password'" name="password" required minlength="8"
+                            class="w-full pl-11 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:ring-4 focus:ring-brand/10 focus:border-brand transition-all duration-300 placeholder:text-slate-400" 
                             placeholder="Minimal 8 karakter">
+                        <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-brand focus:outline-none transition-colors">
+                            <i class="fa-regular fa-eye" x-show="!show"></i>
+                            <i class="fa-regular fa-eye-slash" x-show="show" x-cloak></i>
+                        </button>
                     </div>
                 </div>
 
-                <div class="group">
+                <div class="group" x-data="{ show: false }">
                     <label class="block text-sm font-semibold text-slate-700 mb-2 group-focus-within:text-brand transition-colors">Konfirmasi Password Baru</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400 group-focus-within:text-brand transition-colors">
                             <i class="fa-solid fa-lock-check"></i>
                         </span>
-                        <input type="password" name="password_confirmation" required minlength="8"
-                            class="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:ring-4 focus:ring-brand/10 focus:border-brand transition-all duration-300 placeholder:text-slate-400" 
+                        <input :type="show ? 'text' : 'password'" name="password_confirmation" required minlength="8"
+                            class="w-full pl-11 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:bg-white focus:ring-4 focus:ring-brand/10 focus:border-brand transition-all duration-300 placeholder:text-slate-400" 
                             placeholder="Ketik ulang password baru">
+                        <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-brand focus:outline-none transition-colors">
+                            <i class="fa-regular fa-eye" x-show="!show"></i>
+                            <i class="fa-regular fa-eye-slash" x-show="show" x-cloak></i>
+                        </button>
                     </div>
                 </div>
 

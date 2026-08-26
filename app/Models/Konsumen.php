@@ -10,6 +10,7 @@ class Konsumen extends Model
     protected $fillable = [
         'pangkalan_id',
         'kecamatan_id',
+        'desa_kelurahan_id',
         'kategori',
         'nama_lengkap',
         'nik_encrypted',
@@ -38,6 +39,11 @@ class Konsumen extends Model
         return $this->belongsTo(Kecamatan::class);
     }
 
+    public function desa()
+    {
+        return $this->belongsTo(Desa::class, 'desa_kelurahan_id');
+    }
+
     // ============================================================
     // HELPERS: Enkripsi & Hashing NIK/NIB (BR-20)
     // ============================================================
@@ -45,8 +51,13 @@ class Konsumen extends Model
     /**
      * Simpan NIK terenkripsi + hash untuk lookup (BR-19, BR-20)
      */
-    public function setNikAttribute(string $nik): void
+    public function setNikAttribute(?string $nik): void
     {
+        if (is_null($nik)) {
+            $this->attributes['nik_encrypted'] = null;
+            $this->attributes['nik_hash'] = null;
+            return;
+        }
         $this->attributes['nik_encrypted'] = Crypt::encryptString($nik);
         $this->attributes['nik_hash'] = hash('sha256', $nik);
     }
@@ -54,8 +65,13 @@ class Konsumen extends Model
     /**
      * Simpan NIB terenkripsi + hash untuk lookup (BR-19, BR-20)
      */
-    public function setNibAttribute(string $nib): void
+    public function setNibAttribute(?string $nib): void
     {
+        if (is_null($nib)) {
+            $this->attributes['nib_encrypted'] = null;
+            $this->attributes['nib_hash'] = null;
+            return;
+        }
         $this->attributes['nib_encrypted'] = Crypt::encryptString($nib);
         $this->attributes['nib_hash'] = hash('sha256', $nib);
     }

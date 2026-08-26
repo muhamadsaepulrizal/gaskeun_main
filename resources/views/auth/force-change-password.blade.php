@@ -37,22 +37,34 @@
             <form method="POST" action="{{ route('auth.force-change-password.post') }}">
                 @csrf
 
-                <div class="mb-5">
+                <div class="mb-5" x-data="{ show: false }">
                     <label class="block text-sm font-medium text-slate-300 mb-2">
                         <i class="fa-solid fa-lock text-brand mr-1"></i> Password Baru
                     </label>
-                    <input type="password" name="password" required minlength="8"
-                           class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition"
-                           placeholder="Minimal 8 karakter">
+                    <div class="relative">
+                        <input :type="show ? 'text' : 'password'" name="password" required minlength="8"
+                               class="w-full pl-4 pr-12 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition"
+                               placeholder="Minimal 8 karakter">
+                        <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-white focus:outline-none transition-colors">
+                            <i class="fa-regular fa-eye" x-show="!show"></i>
+                            <i class="fa-regular fa-eye-slash" x-show="show" x-cloak></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="mb-6">
+                <div class="mb-6" x-data="{ show: false }">
                     <label class="block text-sm font-medium text-slate-300 mb-2">
                         <i class="fa-solid fa-lock text-brand mr-1"></i> Konfirmasi Password Baru
                     </label>
-                    <input type="password" name="password_confirmation" required minlength="8"
-                           class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition"
-                           placeholder="Ketik ulang password baru">
+                    <div class="relative">
+                        <input :type="show ? 'text' : 'password'" name="password_confirmation" required minlength="8"
+                               class="w-full pl-4 pr-12 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition"
+                               placeholder="Ketik ulang password baru">
+                        <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 hover:text-white focus:outline-none transition-colors">
+                            <i class="fa-regular fa-eye" x-show="!show"></i>
+                            <i class="fa-regular fa-eye-slash" x-show="show" x-cloak></i>
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit"

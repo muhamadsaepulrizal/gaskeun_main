@@ -217,69 +217,198 @@
                 `;
             }
 
-            // === MARKERS & LAYERS ===
-            let pangkalanMarkers = [];
-            function clearAllMarkers() {
-                pangkalanMarkers.forEach(m => m.remove());
-                pangkalanMarkers = [];
+            // === HIERARCHICAL CLUSTERING DATA ===
+            const groupedByKecamatan = {};
+            const groupedByDesa = {};
+            
+            pangkalanData.forEach((p, idx) => {
+                p.id = idx;
+                const lat = parseFloat(p.latitude);
+                const lng = parseFloat(p.longitude);
+                if (isNaN(lat) || isNaN(lng)) return;
+                
+                const kecName = p.kecamatan || 'Lainnya';
+                const desaName = p.desa || 'Lainnya';
+                const keyDesa = `${kecName}-${desaName}`;
+
+                if (!groupedByKecamatan[kecName]) {
+                    groupedByKecamatan[kecName] = { name: kecName, count: 0, sumLat: 0, sumLng: 0, bounds: new maplibregl.LngLatBounds() };
+                }
+                groupedByKecamatan[kecName].count++;
+                groupedByKecamatan[kecName].sumLat += lat;
+                groupedByKecamatan[kecName].sumLng += lng;
+                groupedByKecamatan[kecName].bounds.extend([lng, lat]);
+
+                if (!groupedByDesa[keyDesa]) {
+                    groupedByDesa[keyDesa] = { name: desaName, kecName: kecName, count: 0, sumLat: 0, sumLng: 0, bounds: new maplibregl.LngLatBounds() };
+                }
+                groupedByDesa[keyDesa].count++;
+                groupedByDesa[keyDesa].sumLat += lat;
+                groupedByDesa[keyDesa].sumLng += lng;
+                groupedByDesa[keyDesa].bounds.extend([lng, lat]);
+            });
+
+            // Calculate centroids
+            Object.values(groupedByKecamatan).forEach(k => { k.lat = k.sumLat / k.count; k.lng = k.sumLng / k.count; });
+            Object.values(groupedByDesa).forEach(d => { d.lat = d.sumLat / d.count; d.lng = d.sumLng / d.count; });
+
+            let currentMarkers = {};
+            let activeFilter = '';
+
+            function createClusterElement(label, count, onClick) {
+                const el = document.createElement('div');
+                el.style.cursor = 'pointer';
+                el.className = 'cluster-marker';
+                
+                let size = count < 10 ? 45 : (count < 50 ? 55 : 65);
+                
+                el.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <div style="background: linear-gradient(135deg, #0F766E, #10B981); color: white; border-radius: 50%; width: ${size}px; height: ${size}px; display: flex; align-items: center; justify-content: center; font-weight: 700; border: 3px solid rgba(255,255,255,0.9); box-shadow: 0 5px 15px rgba(0,0,0,0.25); font-size: ${Math.max(14, size/3.5)}px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(4px);">
+                        ${count}
+                    </div>
+                    <div style="background:rgba(255,255,255,0.95); padding:3px 10px; border-radius:10px; font-size:11px; font-weight:700; color:#0F172A; margin-top:4px; box-shadow:0 3px 6px rgba(0,0,0,0.15); border:1px solid rgba(15,118,110,0.2); text-align:center; max-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        ${label}
+                    </div>
+                </div>`;
+                
+                const circle = el.querySelector('div > div:first-child');
+                el.addEventListener('mouseenter', () => circle.style.transform = 'scale(1.15) translateY(-2px)');
+                el.addEventListener('mouseleave', () => circle.style.transform = 'scale(1) translateY(0)');
+                el.addEventListener('click', onClick);
+                return el;
             }
 
-            function renderMarkers(filterKecamatan = '') {
-                clearAllMarkers();
-                const bounds = new maplibregl.LngLatBounds();
-                let hasPoints = false;
+            function updateClusters() {
+                const zoom = map.getZoom();
+                const newMarkers = {};
+                
+                const addMarker = (id, el, lng, lat, popup) => {
+                    if (!currentMarkers[id]) {
+                        const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
+                            .setLngLat([lng, lat])
+                            .addTo(map);
+                        if(popup) marker.setPopup(popup);
+                        newMarkers[id] = marker;
+                    } else {
+                        newMarkers[id] = currentMarkers[id];
+                        delete currentMarkers[id];
+                    }
+                };
 
-                pangkalanData.forEach(p => {
-                    const lat = parseFloat(p.latitude);
-                    const lng = parseFloat(p.longitude);
-                    if (isNaN(lat) || isNaN(lng)) return;
-                    if (filterKecamatan !== '' && p.kecamatan !== filterKecamatan) return;
+                if (zoom < 11.5) {
+                    // 1. KECAMATAN LEVEL
+                    Object.values(groupedByKecamatan).forEach(k => {
+                        if (activeFilter && k.name !== activeFilter) return;
+                        const id = `kec-${k.name}`;
+                        if (!currentMarkers[id]) {
+                            const el = createClusterElement(k.name, k.count, () => {
+                                map.fitBounds(k.bounds, { padding: 80, maxZoom: 13, duration: 1500 });
+                                map.once('moveend', () => {
+                                    if (map.getZoom() < 11.5) map.easeTo({ zoom: 12, duration: 500 });
+                                });
+                            });
+                            addMarker(id, el, k.lng, k.lat);
+                        } else addMarker(id, null);
+                    });
+                } else if (zoom < 13.5) {
+                    // 2. DESA LEVEL
+                    Object.values(groupedByDesa).forEach(d => {
+                        if (activeFilter && d.kecName !== activeFilter) return;
+                        const id = `desa-${d.kecName}-${d.name}`;
+                        if (!currentMarkers[id]) {
+                            const el = createClusterElement(d.name, d.count, () => {
+                                if (d.count === 1) {
+                                    map.easeTo({ center: [d.lng, d.lat], zoom: 14.5, duration: 1500 });
+                                } else {
+                                    map.fitBounds(d.bounds, { padding: 80, maxZoom: 14.5, duration: 1500 });
+                                    map.once('moveend', () => {
+                                        if (map.getZoom() < 13.5) map.easeTo({ zoom: 14, duration: 500 });
+                                    });
+                                }
+                            });
+                            addMarker(id, el, d.lng, d.lat);
+                        } else addMarker(id, null);
+                    });
+                } else {
+                    // 3. PANGKALAN LEVEL
+                    pangkalanData.forEach(p => {
+                        const lat = parseFloat(p.latitude);
+                        const lng = parseFloat(p.longitude);
+                        if (isNaN(lat) || isNaN(lng)) return;
+                        if (activeFilter && p.kecamatan !== activeFilter) return;
 
-                    const statusColor = getStatusColor(p.status);
+                        const id = `point-${p.id}`;
+                        if (!currentMarkers[id]) {
+                            const el = document.createElement('div');
+                            el.className = 'custom-marker';
+                            el.style.cursor = 'pointer';
+                            const statusColor = getStatusColor(p.status);
+                            
+                            const svgWrapper = document.createElement('div');
+                            svgWrapper.style.transition = 'transform 0.2s';
+                            svgWrapper.className = 'marker-svg-wrapper';
+                            svgWrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="30" height="30" style="fill:${statusColor}; filter:drop-shadow(0px 3px 5px rgba(0,0,0,0.3));">
+                                <path d="M192 0C86 0 0 86 0 192c0 106 192 320 192 320s192-214 192-320c0-106-86-192-192-192zm0 288c-53 0-96-43-96-96s43-96 96-96 96 43 96 96-43 96-96 96z"/>
+                            </svg>`;
+                            el.appendChild(svgWrapper);
 
-                    const el = document.createElement('div');
-                    el.className = 'custom-marker';
-                    el.style.cursor = 'pointer';
-                    
-                    const svgWrapper = document.createElement('div');
-                    svgWrapper.style.transition = 'transform 0.2s';
-                    svgWrapper.className = 'marker-svg-wrapper';
-                    svgWrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="30" height="30" style="fill:${statusColor}; filter:drop-shadow(0px 3px 5px rgba(0,0,0,0.3));">
-                        <path d="M192 0C86 0 0 86 0 192c0 106 192 320 192 320s192-214 192-320c0-106-86-192-192-192zm0 288c-53 0-96-43-96-96s43-96 96-96 96 43 96 96-43 96-96 96z"/>
-                    </svg>`;
-                    
-                    el.appendChild(svgWrapper);
+                            el.addEventListener('mouseenter', () => svgWrapper.style.transform = 'scale(1.2) translateY(-3px)');
+                            el.addEventListener('mouseleave', () => svgWrapper.style.transform = 'scale(1)');
 
-                    el.addEventListener('mouseenter', () => svgWrapper.style.transform = 'scale(1.2) translateY(-3px)');
-                    el.addEventListener('mouseleave', () => svgWrapper.style.transform = 'scale(1)');
+                            const popup = new maplibregl.Popup({ offset: [0, -30], maxWidth: '320px' })
+                                .setHTML(createPopupHTML(p));
 
-                    const popup = new maplibregl.Popup({ offset: [0, -30], maxWidth: '320px' })
-                        .setHTML(createPopupHTML(p));
+                            addMarker(id, el, lng, lat, popup);
+                        } else addMarker(id, null);
+                    });
+                }
 
-                    const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
-                        .setLngLat([lng, lat])
-                        .setPopup(popup)
-                        .addTo(map);
+                for (const id in currentMarkers) {
+                    currentMarkers[id].remove();
+                }
+                currentMarkers = newMarkers;
+            }
 
-                    pangkalanMarkers.push(marker);
-                    bounds.extend([lng, lat]);
-                    hasPoints = true;
-                });
-
-                if (hasPoints) {
-                    map.fitBounds(bounds, { padding: 60, maxZoom: 14, duration: 1500 });
+            function fitMapToBounds(filterKecamatan = '') {
+                activeFilter = filterKecamatan;
+                if (filterKecamatan !== '' && groupedByKecamatan[filterKecamatan]) {
+                    const k = groupedByKecamatan[filterKecamatan];
+                    map.fitBounds(k.bounds, { padding: 60, maxZoom: 13, duration: 1500 });
+                    map.once('moveend', () => {
+                        if (map.getZoom() < 11.5) map.easeTo({ zoom: 12, duration: 500 });
+                    });
+                } else {
+                    // Fit to all data
+                    const bounds = new maplibregl.LngLatBounds();
+                    Object.values(groupedByKecamatan).forEach(k => {
+                        bounds.extend([k.lng, k.lat]);
+                    });
+                    if (Object.keys(groupedByKecamatan).length > 0) {
+                        map.fitBounds(bounds, { padding: 60, maxZoom: 10, duration: 1500 });
+                    }
                 }
             }
+
+            // Update clusters when map is moved or zoomed
+            map.on('move', () => {
+                updateClusters(activeFilter);
+            });
 
             // === MAP LOAD ===
             map.on('load', () => {
                 enable3DTerrain();
-                renderMarkers();
+                fitMapToBounds('');
+                // updateClusters will be called by 'move' event triggered by fitBounds
+                // but just in case, call it initially
+                setTimeout(() => updateClusters(''), 100); 
             });
 
             // === EVENT HANDLERS ===
             filterSelect.addEventListener('change', function(e) {
-                renderMarkers(e.target.value);
+                activeFilter = e.target.value;
+                fitMapToBounds(activeFilter);
+                updateClusters(activeFilter);
             });
         });
     </script>

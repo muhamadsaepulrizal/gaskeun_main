@@ -54,7 +54,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::with('roles');
+        $query = User::with(['roles', 'profilAgen', 'pangkalanProfile']);
 
         // Filter search
         if ($search = $request->input('search')) {
@@ -85,7 +85,8 @@ class UserController extends Controller
     {
         $roles  = Role::all();
         $agens  = User::role('Agen LPG')->where('status_aktif', true)->get(); // Untuk BR-02
-        return view('superadmin.users.create', compact('roles', 'agens'));
+        $kecamatans = \App\Models\Kecamatan::orderBy('nama_kecamatan')->get();
+        return view('superadmin.users.create', compact('roles', 'agens', 'kecamatans'));
     }
 
     /**
@@ -102,13 +103,25 @@ class UserController extends Controller
             'role'     => 'required|exists:roles,name',
         ];
 
-        // BR-02: Pangkalan wajib pilih agen pembina
-        if ($request->role === 'Pangkalan LPG') {
-            $rules['agen_pembina_id'] = 'required|exists:users,id';
+        // Validation for location when creating Agen or Pangkalan
+        if (in_array($request->role, ['Agen LPG', 'Pangkalan LPG'])) {
+            $rules['alamat'] = 'required|string';
+            $rules['kecamatan_id'] = 'required|exists:kecamatans,id';
+            $rules['desa_kelurahan_id'] = 'required|exists:desas,id';
+            $rules['latitude'] = 'required|numeric';
+            $rules['longitude'] = 'required|numeric';
+            
+            if ($request->role === 'Pangkalan LPG') {
+                $rules['agen_pembina_id'] = 'required|exists:users,id';
+            }
         }
 
         $request->validate($rules, [
             'agen_pembina_id.required' => 'Agen Pembina wajib dipilih untuk akun Pangkalan LPG.',
+            'kecamatan_id.required' => 'Kecamatan wajib diisi untuk role ini.',
+            'desa_kelurahan_id.required' => 'Desa/Kelurahan wajib diisi untuk role ini.',
+            'latitude.required' => 'Latitude wajib diisi. Silakan pilih lokasi di peta.',
+            'longitude.required' => 'Longitude wajib diisi. Silakan pilih lokasi di peta.',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -129,20 +142,28 @@ class UserController extends Controller
             // BR-01: Simpan ke tabel profil turunan
             if ($request->role === 'Agen LPG') {
                 ProfilAgen::create([
-                    'user_id'   => $user->id,
-                    'nama_agen' => $request->name,
-                    'kontak'    => $request->kontak ?? null,
-                    'alamat'    => $request->alamat ?? null,
+                    'user_id'           => $user->id,
+                    'nama_agen'         => $request->name,
+                    'kontak'            => $request->kontak ?? null,
+                    'alamat'            => $request->alamat ?? null,
+                    'kecamatan_id'      => $request->kecamatan_id,
+                    'desa_kelurahan_id' => $request->desa_kelurahan_id,
+                    'latitude'          => $request->latitude,
+                    'longitude'         => $request->longitude,
                 ]);
             }
 
             if ($request->role === 'Pangkalan LPG') {
                 PangkalanProfile::create([
-                    'user_id'          => $user->id,
-                    'agen_pembina_id'  => $request->agen_pembina_id, // BR-02
-                    'nama_pangkalan'   => $request->name,
-                    'kontak'           => $request->kontak ?? null,
-                    'alamat'           => $request->alamat ?? null,
+                    'user_id'           => $user->id,
+                    'agen_pembina_id'   => $request->agen_pembina_id, // BR-02
+                    'nama_pangkalan'    => $request->name,
+                    'kontak'            => $request->kontak ?? null,
+                    'alamat'            => $request->alamat ?? null,
+                    'kecamatan_id'      => $request->kecamatan_id,
+                    'desa_kelurahan_id' => $request->desa_kelurahan_id,
+                    'latitude'          => $request->latitude,
+                    'longitude'         => $request->longitude,
                 ]);
             }
 
@@ -154,9 +175,11 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        $user->load('pangkalanProfile', 'profilAgen');
         $roles = Role::all();
         $agens = User::role('Agen LPG')->where('status_aktif', true)->get();
-        return view('superadmin.users.edit', compact('user', 'roles', 'agens'));
+        $kecamatans = \App\Models\Kecamatan::orderBy('nama_kecamatan')->get();
+        return view('superadmin.users.edit', compact('user', 'roles', 'agens', 'kecamatans'));
     }
 
     public function update(Request $request, User $user)
@@ -168,11 +191,26 @@ class UserController extends Controller
             'role'     => 'required|exists:roles,name',
         ];
 
-        if ($request->role === 'Pangkalan LPG') {
-            $rules['agen_pembina_id'] = 'required|exists:users,id';
+        // Validation for location when creating Agen or Pangkalan
+        if (in_array($request->role, ['Agen LPG', 'Pangkalan LPG'])) {
+            $rules['alamat'] = 'required|string';
+            $rules['kecamatan_id'] = 'required|exists:kecamatans,id';
+            $rules['desa_kelurahan_id'] = 'required|exists:desas,id';
+            $rules['latitude'] = 'required|numeric';
+            $rules['longitude'] = 'required|numeric';
+            
+            if ($request->role === 'Pangkalan LPG') {
+                $rules['agen_pembina_id'] = 'required|exists:users,id';
+            }
         }
 
-        $request->validate($rules);
+        $request->validate($rules, [
+            'agen_pembina_id.required' => 'Agen Pembina wajib dipilih untuk akun Pangkalan LPG.',
+            'kecamatan_id.required' => 'Kecamatan wajib diisi untuk role ini.',
+            'desa_kelurahan_id.required' => 'Desa/Kelurahan wajib diisi untuk role ini.',
+            'latitude.required' => 'Latitude wajib diisi. Silakan pilih lokasi di peta.',
+            'longitude.required' => 'Longitude wajib diisi. Silakan pilih lokasi di peta.',
+        ]);
 
         DB::transaction(function () use ($request, $user) {
             $user->update([
@@ -184,10 +222,32 @@ class UserController extends Controller
             $user->syncRoles([$request->role]);
 
             // Update profil turunan jika ada
-            if ($request->role === 'Pangkalan LPG' && $request->filled('agen_pembina_id')) {
+            if ($request->role === 'Agen LPG') {
+                $user->profilAgen()->updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'nama_agen'         => $request->name,
+                        'alamat'            => $request->alamat ?? null,
+                        'kecamatan_id'      => $request->kecamatan_id,
+                        'desa_kelurahan_id' => $request->desa_kelurahan_id,
+                        'latitude'          => $request->latitude,
+                        'longitude'         => $request->longitude,
+                    ]
+                );
+            }
+
+            if ($request->role === 'Pangkalan LPG') {
                 $user->pangkalanProfile()->updateOrCreate(
                     ['user_id' => $user->id],
-                    ['agen_pembina_id' => $request->agen_pembina_id, 'nama_pangkalan' => $request->name]
+                    [
+                        'agen_pembina_id'   => $request->agen_pembina_id, 
+                        'nama_pangkalan'    => $request->name,
+                        'alamat'            => $request->alamat ?? null,
+                        'kecamatan_id'      => $request->kecamatan_id,
+                        'desa_kelurahan_id' => $request->desa_kelurahan_id,
+                        'latitude'          => $request->latitude,
+                        'longitude'         => $request->longitude,
+                    ]
                 );
             }
 

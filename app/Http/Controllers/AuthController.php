@@ -48,11 +48,11 @@ class AuthController extends Controller
         $request->session()->regenerate();
         activity()->log('User logged in');
 
-        // Force Password Change: Jika password direset oleh Admin
-        if ($user->force_password_change) {
-            return redirect()->route('auth.force-change-password')
-                ->with('warning', 'Password Anda telah direset oleh Admin. Harap ganti password sekarang.');
-        }
+        // Force Password Change dinonaktifkan sesuai permintaan (bisa langsung masuk)
+        // if ($user->force_password_change) {
+        //     return redirect()->route('auth.force-change-password')
+        //         ->with('warning', 'Password Anda telah direset oleh Admin. Harap ganti password sekarang.');
+        // }
 
         return redirect()->intended('/dashboard')->with('success', 'Berhasil login.');
     }

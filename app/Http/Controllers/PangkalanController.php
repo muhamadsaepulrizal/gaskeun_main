@@ -140,74 +140,58 @@ class PangkalanController extends Controller
     // ============================================================
     public function konsumenIndex()
     {
-        $konsumens = Konsumen::where('pangkalan_id', Auth::id())
+        $konsumens = Konsumen::with(['kecamatan', 'desa', 'pangkalan.pangkalanProfile'])
             ->latest()->paginate(15);
         return view('pangkalan.konsumen.index', compact('konsumens'));
     }
 
     public function konsumenCreate()
     {
-        return view('pangkalan.konsumen.create');
+        $kecamatans = \App\Models\Kecamatan::orderBy('nama_kecamatan')->get();
+        return view('pangkalan.konsumen.create', compact('kecamatans'));
     }
 
     public function konsumenStore(Request $request)
     {
         $kategori = $request->kategori;
         $rules = [
-            'kategori'     => 'required|in:Rumah Tangga,Usaha Mikro,Petani Sasaran,Nelayan Sasaran',
-            'nama_lengkap' => 'required|string|max:255',
+            'kategori'          => 'required|in:Rumah Tangga,Usaha Mikro,Petani Sasaran,Nelayan Sasaran',
+            'nama_lengkap'      => 'required|string|max:255',
+            'nik'               => 'required|string|digits:16',
+            'kecamatan_id'      => 'required|exists:kecamatans,id',
+            'desa_kelurahan_id' => 'required|exists:desas,id',
+            'alamat'            => 'nullable|string|max:500',
         ];
 
-        // Validasi dan mapping dokumen berdasarkan kategori
-        if ($kategori === 'Rumah Tangga') {
-            $rules['nik'] = ['required', 'string', 'digits:16'];
-            $rules['desa'] = ['required', 'string', 'max:500'];
-        } elseif ($kategori === 'Usaha Mikro') {
-            $rules['nib'] = ['required', 'string'];
-            $rules['jenis_usaha'] = ['required', 'string', 'max:500'];
-        } elseif ($kategori === 'Petani Sasaran') {
-            $rules['nik'] = ['required', 'string', 'digits:16'];
-            $rules['kelompok_tani'] = ['required', 'string', 'max:500'];
-        } elseif ($kategori === 'Nelayan Sasaran') {
-            $rules['nik'] = ['required', 'string', 'digits:16'];
-            $rules['kapal'] = ['required', 'string', 'max:500'];
-        }
-
         $request->validate($rules, [
-            'nik.required' => 'NIK wajib diisi.',
-            'nik.digits'   => 'NIK harus 16 digit angka.',
-            'nib.required' => 'NIB wajib diisi.',
+            'nik.required'               => 'NIK wajib diisi.',
+            'nik.digits'                 => 'NIK harus 16 digit angka.',
+            'kecamatan_id.required'      => 'Kecamatan wajib dipilih.',
+            'desa_kelurahan_id.required' => 'Desa wajib dipilih.',
         ]);
 
-        // Validasi unik global NIK/NIB lintas pangkalan
+        // Validasi unik global NIK lintas pangkalan
         if ($request->filled('nik') && Konsumen::nikSudahTerdaftar($request->nik)) {
-            return back()->withErrors(['nik' => 'NIK ini sudah terdaftar.'])->withInput();
-        }
-        if ($request->filled('nib') && Konsumen::nibSudahTerdaftar($request->nib)) {
-            return back()->withErrors(['nib' => 'NIB ini sudah terdaftar.'])->withInput();
+            return back()->withErrors(['nik' => 'NIK ini sudah terdaftar di sistem. Silakan langsung cari pada menu penyaluran.'])->withInput();
         }
 
-        // Tentukan data tambahan yang disimpan di kolom alamat
-        $alamat = null;
-        if ($kategori === 'Rumah Tangga') $alamat = $request->desa;
-        if ($kategori === 'Usaha Mikro') $alamat = $request->jenis_usaha;
-        if ($kategori === 'Petani Sasaran') $alamat = $request->kelompok_tani;
-        if ($kategori === 'Nelayan Sasaran') $alamat = $request->kapal;
-
-        // Enkripsi NIK/NIB sebelum simpan
+        // Enkripsi NIK sebelum simpan
         $konsumen = Konsumen::create([
-            'pangkalan_id' => Auth::id(),
-            'kategori'     => $kategori,
-            'nama_lengkap' => $request->nama_lengkap,
-            'alamat'       => $alamat,
+            'pangkalan_id'      => Auth::id(),
+            'kategori'          => $kategori,
+            'nama_lengkap'      => $request->nama_lengkap,
+            'kecamatan_id'      => $request->kecamatan_id,
+            'desa_kelurahan_id' => $request->desa_kelurahan_id,
+            'alamat'            => $request->alamat,
         ]);
 
         if ($request->filled('nik')) {
             $konsumen->setNikAttribute($request->nik);
         }
-        if ($request->filled('nib')) {
-            $konsumen->setNibAttribute($request->nib);
-        }
+        
+        // Kosongkan NIB karena sudah tidak digunakan
+        $konsumen->setNibAttribute(null);
+        
         $konsumen->save();
 
         return redirect()->route('pangkalan.konsumen.index')
@@ -216,31 +200,29 @@ class PangkalanController extends Controller
 
     public function searchKonsumen(Request $request)
     {
-        $kategori = $request->get('kategori');
-        $keyword = $request->get('q');
+        $keyword = trim($request->get('q'));
         
-        if (!$kategori || empty(trim($keyword))) {
+        if (empty($keyword)) {
             return response()->json([]);
         }
 
-        $query = Konsumen::where('pangkalan_id', Auth::id())
-            ->where('kategori', $kategori);
+        $query = Konsumen::query();
 
         $hashKeyword = hash('sha256', $keyword);
 
         $query->where(function($q) use ($keyword, $hashKeyword) {
             $q->where('nama_lengkap', 'like', "%{$keyword}%")
-              ->orWhere('nik_hash', $hashKeyword)
-              ->orWhere('nib_hash', $hashKeyword);
+              ->orWhere('nik_hash', $hashKeyword);
         });
 
         $konsumens = $query->limit(10)->get()->map(function($k) {
-            $identifier = $k->kategori === 'Usaha Mikro' ? $k->nib : $k->nik;
+            $identifier = $k->nik;
             return [
                 'id' => $k->id,
                 'nama' => $k->nama_lengkap,
                 'identifier' => $identifier ? substr($identifier, 0, 6) . str_repeat('*', max(0, strlen($identifier) - 6)) : '-',
-                'alamat' => $k->alamat
+                'alamat' => $k->alamat,
+                'kategori' => $k->kategori
             ];
         });
 

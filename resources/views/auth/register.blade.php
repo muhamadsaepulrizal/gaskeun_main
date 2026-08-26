@@ -4,7 +4,6 @@
 @section('content')
 <div>
     <div class="mb-8">
-        <p class="text-xs font-mono mb-3" style="color:#10B981; letter-spacing:0.1em;">// REGISTRASI BARU</p>
         <h2 style="font-size:2rem; font-weight:800; letter-spacing:-0.035em; color:#F1F5F9; line-height:1.15;">Buat Akun<br><span style="background:linear-gradient(135deg,#10B981,#06B6D4); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Masyarakat</span></h2>
         <p class="mt-2 text-sm" >NIK Anda harus terdaftar dalam data kependudukan setempat.</p>
     </div>

@@ -20,7 +20,7 @@ class PublicController extends Controller
     public function peta()
     {
         // Real Data Pangkalan untuk Peta
-        $pangkalans = \App\Models\PangkalanProfile::with('user.stokPangkalan', 'kecamatan', 'agenPembina.profilAgen')->get();
+        $pangkalans = \App\Models\PangkalanProfile::with('user.stokPangkalan', 'kecamatan', 'desaKelurahan', 'agenPembina.profilAgen')->get();
         $pangkalanList = $pangkalans->map(function($p) {
             $stok = optional($p->user->stokPangkalan)->jumlah_tabung ?? 0;
             return [
@@ -30,6 +30,7 @@ class PublicController extends Controller
                 'stok' => $stok,
                 'status' => $stok > 30 ? 'Aman' : ($stok > 0 ? 'Menipis' : 'Kosong'),
                 'kecamatan' => optional($p->kecamatan)->nama_kecamatan ?? 'Garut',
+                'desa' => optional($p->desaKelurahan)->nama_desa ?? 'Tidak Diketahui',
                 'agen' => optional($p->agenPembina->profilAgen)->nama_agen ?? (optional($p->agenPembina)->name ?? 'Tidak ada Agen'),
                 'latitude' => (float) $p->latitude,
                 'longitude' => (float) $p->longitude,
@@ -59,7 +60,7 @@ class PublicController extends Controller
             ->toArray();
 
         // Data pangkalan untuk overlay marker di atas heatmap
-        $pangkalanList = \App\Models\PangkalanProfile::with('user.stokPangkalan', 'kecamatan', 'agenPembina.profilAgen')
+        $pangkalanList = \App\Models\PangkalanProfile::with('user.stokPangkalan', 'kecamatan', 'desaKelurahan', 'agenPembina.profilAgen')
             ->get()
             ->filter(fn($p) => $p->latitude && $p->longitude)
             ->map(function($p) {
@@ -71,6 +72,7 @@ class PublicController extends Controller
                     'stok'      => $stok,
                     'status'    => $stok > 30 ? 'Aman' : ($stok > 0 ? 'Menipis' : 'Kosong'),
                     'kecamatan' => optional($p->kecamatan)->nama_kecamatan ?? 'Garut',
+                    'desa'      => optional($p->desaKelurahan)->nama_desa ?? 'Tidak Diketahui',
                     'agen'      => optional($p->agenPembina->profilAgen)->nama_agen ?? (optional($p->agenPembina)->name ?? 'Tidak ada Agen'),
                     'latitude'  => (float) $p->latitude,
                     'longitude' => (float) $p->longitude,

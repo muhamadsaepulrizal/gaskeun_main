@@ -129,6 +129,8 @@ Route::middleware(['auth', 'base_role:Super Admin'])->prefix('superadmin')->name
 
     Route::get('roles', [RolePermissionController::class, 'index'])->name('roles.index');
     Route::post('roles', [RolePermissionController::class, 'storeRole'])->name('roles.store');
+    Route::put('roles/{role}', [RolePermissionController::class, 'updateRole'])->name('roles.update');
+    Route::delete('roles/{role}', [RolePermissionController::class, 'destroyRole'])->name('roles.destroy');
     Route::get('logs', [ActivityLogController::class, 'index'])->name('logs.index');
 });
 
@@ -139,12 +141,9 @@ Route::middleware(['auth', 'base_role:Disperindag'])->prefix('disperindag')->nam
     // Master Data
     Route::resource('kecamatans', KecamatanController::class)->except(['show']);
     Route::resource('desas', DesaController::class)->except(['show']);
-    Route::resource('kks', KkController::class)->except(['show']);
-    Route::resource('penduduks', PendudukController::class)->except(['show']);
-    Route::resource('nelayans', NelayanController::class)->except(['show']);
-    Route::resource('petanis', PetaniController::class)->except(['show']);
-    Route::resource('umkms', UmkmController::class)->except(['show']);
-    Route::resource('rts', RumahTanggaSasaranController::class)->except(['show']);
+    
+    // Data Konsumen Terdaftar
+    Route::resource('konsumens', App\Http\Controllers\Disperindag\KonsumenController::class)->only(['index', 'edit', 'update', 'destroy']);
 
     // Keluhan Management & Verifikasi Tiket
     Route::get('keluhan', [DisperindagKeluhanController::class, 'index'])->name('keluhan.index');

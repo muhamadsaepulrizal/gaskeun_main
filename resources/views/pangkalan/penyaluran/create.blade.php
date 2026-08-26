@@ -67,7 +67,7 @@
                         <i class="fa-solid fa-spinner fa-spin text-brand" x-show="isSearching" style="display: none;"></i>
                     </div>
                     <input type="text" x-model="keyword" @input="debounceSearch()"
-                           :placeholder="kategori === 'Usaha Mikro' ? 'Ketik Nama Usaha atau NIB...' : 'Ketik Nama atau NIK...'"
+                           placeholder="Ketik Nama Lengkap atau NIK..."
                            :disabled="!kategori || selectedKonsumen"
                            class="w-full pl-11 pr-4 py-3.5 border-2 border-slate-200 rounded-xl text-slate-700 font-medium focus:outline-none focus:ring-4 focus:ring-brand/10 focus:border-brand transition-all disabled:bg-slate-50 disabled:cursor-not-allowed">
                     
@@ -86,7 +86,7 @@
                                         class="w-full text-left px-5 py-3 hover:bg-slate-50 transition flex justify-between items-center group">
                                     <div>
                                         <p class="font-bold text-slate-800 group-hover:text-brand transition" x-text="item.nama"></p>
-                                        <p class="text-xs text-slate-500 mt-0.5"><span x-text="kategori == 'Usaha Mikro' ? 'NIB' : 'NIK'"></span>: <span class="font-mono" x-text="item.identifier"></span></p>
+                                        <p class="text-xs text-slate-500 mt-0.5">NIK: <span class="font-mono" x-text="item.identifier"></span> &bull; <span class="font-semibold text-brand" x-text="item.kategori"></span></p>
                                     </div>
                                     <div class="text-xs px-2 py-1 bg-slate-100 text-slate-600 rounded" x-text="item.alamat"></div>
                                 </button>
@@ -217,6 +217,7 @@ function kasirApp() {
         selectKonsumen(item) {
             this.selectedKonsumen = item;
             this.keyword = item.nama;
+            this.kategori = item.kategori;
             this.results = [];
         },
 
@@ -235,7 +236,7 @@ function kasirApp() {
         },
 
         fetchData() {
-            fetch(`{{ route('pangkalan.konsumen.search') }}?kategori=${encodeURIComponent(this.kategori)}&q=${encodeURIComponent(this.keyword)}`)
+            fetch(`{{ route('pangkalan.konsumen.search') }}?q=${encodeURIComponent(this.keyword)}`)
                 .then(res => res.json())
                 .then(data => {
                     this.results = data;

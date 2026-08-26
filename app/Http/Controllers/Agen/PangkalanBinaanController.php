@@ -41,6 +41,7 @@ class PangkalanBinaanController extends Controller
             'alamat'         => 'required|string',
             'kontak'         => 'required|string|max:20',
             'kecamatan_id'   => 'nullable|exists:kecamatans,id',
+            'desa_kelurahan_id' => 'nullable|exists:desas,id',
             'latitude'       => 'nullable|numeric',
             'longitude'      => 'nullable|numeric',
             'kuota_bulanan'  => 'required|integer|min:0',
@@ -73,16 +74,17 @@ class PangkalanBinaanController extends Controller
 
             // 2. Create Pangkalan Profile
             PangkalanProfile::create([
-                'user_id'         => $user->id,
-                'agen_pembina_id' => auth()->id(),
-                'kecamatan_id'    => $request->kecamatan_id,
-                'nama_pangkalan'  => $request->nama_pangkalan,
-                'no_registrasi'   => $request->no_registrasi,
-                'alamat'          => $request->alamat,
-                'kontak'          => $request->kontak,
-                'latitude'        => $request->latitude,
-                'longitude'       => $request->longitude,
-                'kuota_bulanan'   => $request->kuota_bulanan,
+                'user_id'           => $user->id,
+                'agen_pembina_id'   => auth()->id(),
+                'kecamatan_id'      => $request->kecamatan_id,
+                'desa_kelurahan_id' => $request->desa_kelurahan_id,
+                'nama_pangkalan'    => $request->nama_pangkalan,
+                'no_registrasi'     => $request->no_registrasi,
+                'alamat'            => $request->alamat,
+                'kontak'            => $request->kontak,
+                'latitude'          => $request->latitude,
+                'longitude'         => $request->longitude,
+                'kuota_bulanan'     => $request->kuota_bulanan,
             ]);
 
             // 3. Create Stok Awal (0)
@@ -115,6 +117,7 @@ class PangkalanBinaanController extends Controller
             'alamat'         => 'required|string',
             'kontak'         => 'required|string|max:20',
             'kecamatan_id'   => 'nullable|exists:kecamatans,id',
+            'desa_kelurahan_id' => 'nullable|exists:desas,id',
             'latitude'       => 'nullable|numeric',
             'longitude'      => 'nullable|numeric',
             'kuota_bulanan'  => 'required|integer|min:0',
@@ -122,7 +125,7 @@ class PangkalanBinaanController extends Controller
 
         DB::transaction(function () use ($request, $pangkalan) {
             $pangkalan->update($request->only([
-                'nama_pangkalan', 'no_registrasi', 'alamat', 'kontak', 'kecamatan_id', 'latitude', 'longitude', 'kuota_bulanan'
+                'nama_pangkalan', 'no_registrasi', 'alamat', 'kontak', 'kecamatan_id', 'desa_kelurahan_id', 'latitude', 'longitude', 'kuota_bulanan'
             ]));
 
             // Update user name juga biar sinkron

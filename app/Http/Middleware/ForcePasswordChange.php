@@ -15,15 +15,16 @@ class ForcePasswordChange
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->check() && auth()->user()->force_password_change) {
-            // Biarkan user mengakses halaman ganti password atau logout
-            if ($request->routeIs('auth.force-change-password', 'auth.force-change-password.post', 'logout')) {
-                return $next($request);
-            }
-            
-            return redirect()->route('auth.force-change-password')
-                ->with('warning', 'Password Anda telah direset oleh Admin. Harap ganti password sekarang.');
-        }
+        // Fitur paksa ganti password telah dinonaktifkan.
+        // if (auth()->check() && auth()->user()->force_password_change) {
+        //     // Biarkan user mengakses halaman ganti password atau logout
+        //     if ($request->routeIs('auth.force-change-password', 'auth.force-change-password.post', 'logout')) {
+        //         return $next($request);
+        //     }
+        //     
+        //     return redirect()->route('auth.force-change-password')
+        //         ->with('warning', 'Password Anda telah direset oleh Admin. Harap ganti password sekarang.');
+        // }
 
         return $next($request);
     }

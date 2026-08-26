@@ -1,16 +1,16 @@
 @extends('layouts.app')
-@section('title', 'Registrasi Konsumen')
+@section('title', 'Edit Data Konsumen')
 
 @section('content')
 <div class="p-6 lg:p-8 bg-slate-50 min-h-full">
     <!-- Header -->
     <div class="mb-8 flex items-center justify-between">
         <div>
-            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Registrasi Konsumen Baru</h1>
-            <p class="text-sm text-slate-500 mt-1">Daftarkan konsumen penerima LPG bersubsidi di pangkalan Anda.</p>
+            <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Edit Data Konsumen</h1>
+            <p class="text-sm text-slate-500 mt-1">Perbarui data konsumen penerima LPG bersubsidi secara global.</p>
         </div>
-        <a href="{{ route('pangkalan.konsumen.index') }}" class="text-sm text-slate-500 hover:text-brand flex items-center gap-2 transition">
-            <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar Konsumen
+        <a href="{{ route('disperindag.konsumens.index') }}" class="text-sm text-slate-500 hover:text-brand flex items-center gap-2 transition">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar
         </a>
     </div>
 
@@ -26,8 +26,9 @@
         <!-- Form dengan Alpine.js untuk tampilan dinamis -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6"
              x-data="konsumenForm()">
-            <form method="POST" action="{{ route('pangkalan.konsumen.store') }}">
+            <form method="POST" action="{{ route('disperindag.konsumens.update', $konsumen->id) }}">
                 @csrf
+                @method('PUT')
 
                 <!-- Kategori Konsumen -->
                 <div class="mb-6">
@@ -53,15 +54,15 @@
                 </div>
 
                 <!-- Form Fields -->
-                <div class="p-5 bg-slate-50 rounded-xl border border-slate-100 mb-6" x-show="kategori !== ''" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0">
+                <div class="p-5 bg-slate-50 rounded-xl border border-slate-100 mb-6">
                     <h3 class="font-bold text-slate-800 mb-4 pb-2 border-b border-slate-200 flex items-center gap-2">
-                        <i class="fa-solid fa-clipboard-list text-brand"></i> Detail <span x-text="kategori"></span>
+                        <i class="fa-solid fa-clipboard-list text-brand"></i> Detail Data Konsumen
                     </h3>
 
                     <!-- NIK -->
                     <div class="mb-4">
                         <label class="block text-sm font-bold text-slate-700 mb-2">NIK <span class="text-red-500">*</span></label>
-                        <input type="text" name="nik" value="{{ old('nik') }}" maxlength="16" pattern="[0-9]{16}" required
+                        <input type="text" name="nik" value="{{ old('nik', $konsumen->nik) }}" maxlength="16" pattern="[0-9]{16}" required
                                class="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition font-mono"
                                placeholder="16 digit angka NIK KTP">
                         @error('nik')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
@@ -70,7 +71,7 @@
                     <!-- Nama Lengkap -->
                     <div class="mb-4">
                         <label class="block text-sm font-bold text-slate-700 mb-2">Nama Lengkap <span class="text-red-500">*</span></label>
-                        <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required
+                        <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $konsumen->nama_lengkap) }}" required
                                class="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition"
                                placeholder="Masukkan nama lengkap">
                         @error('nama_lengkap')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
@@ -105,7 +106,7 @@
                     <!-- Alamat -->
                     <div class="mb-4">
                         <label class="block text-sm font-bold text-slate-700 mb-2">Alamat Lengkap</label>
-                        <textarea name="alamat" rows="2" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition resize-none" placeholder="Masukkan alamat lengkap RT/RW (Opsional)">{{ old('alamat') }}</textarea>
+                        <textarea name="alamat" rows="2" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand transition resize-none" placeholder="Masukkan alamat lengkap RT/RW (Opsional)">{{ old('alamat', $konsumen->alamat) }}</textarea>
                         @error('alamat')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                 </div>
@@ -113,21 +114,16 @@
                 <div class="flex gap-3">
                     <button type="submit"
                             :disabled="kategori === ''"
-                            :class="kategori === '' ? 'bg-slate-300 text-slate-500 cursor-not-allowed' : 'bg-brand hover:bg-brand-dark text-white shadow-brand/30 shadow-lg hover:-translate-y-0.5' flex-1 font-bold py-3.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-user-plus"></i> Simpan Pendaftaran
+                            :class="kategori === '' ? 'bg-slate-300 text-slate-500 cursor-not-allowed' : 'bg-brand hover:bg-brand-dark text-white shadow-brand/30 shadow-lg hover:-translate-y-0.5'"
+                            class="flex-1 font-bold py-3.5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-save"></i> Simpan Perubahan
                     </button>
-                    <a href="{{ route('pangkalan.konsumen.index') }}"
+                    <a href="{{ route('disperindag.konsumens.index') }}"
                        class="px-6 py-3.5 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 font-bold rounded-xl transition-colors flex items-center gap-2">
                         Batal
                     </a>
                 </div>
             </form>
-        </div>
-
-        <!-- Info Box -->
-        <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-700">
-            <i class="fa-solid fa-shield-halved mr-2"></i>
-            <strong>Keamanan Data:</strong> NIK akan dienkripsi sebelum disimpan ke database. Validasi dilakukan secara global untuk mencegah duplikasi pendaftaran di pangkalan berbeda.
         </div>
     </div>
 </div>
@@ -137,9 +133,9 @@
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('konsumenForm', () => ({
-            kategori: '{{ old('kategori', '') }}',
-            kecamatan_id: '{{ old('kecamatan_id', '') }}',
-            desa_id: '{{ old('desa_kelurahan_id', '') }}',
+            kategori: '{{ old('kategori', $konsumen->kategori) }}',
+            kecamatan_id: '{{ old('kecamatan_id', $konsumen->kecamatan_id) }}',
+            desa_id: '{{ old('desa_kelurahan_id', $konsumen->desa_kelurahan_id) }}',
             desas: [],
             isLoadingDesa: false,
 

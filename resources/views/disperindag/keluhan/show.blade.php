@@ -5,7 +5,6 @@
 <div class="p-6 lg:p-8">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-            <p class="text-xs font-mono mb-1 text-emerald-600 tracking-widest uppercase">// Disperindag — Tiket Keluhan</p>
             <h1 class="text-2xl font-bold text-slate-800">Detail Pengaduan</h1>
             <p class="text-sm text-slate-500 mt-1">Kode Tiket: <span class="font-mono font-bold text-slate-700">{{ $keluhan->kode_tiket ?? 'N/A' }}</span></p>
         </div>

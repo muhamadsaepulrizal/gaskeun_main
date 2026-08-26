@@ -87,30 +87,43 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     @forelse($users as $index => $user)
+                    @php
+                        $roleName = $user->roles->first()->name ?? 'Tanpa Role';
+                        $kontak = null;
+                        if ($roleName === 'Agen LPG' && $user->profilAgen) {
+                            $kontak = $user->profilAgen->kontak;
+                        } elseif ($roleName === 'Pangkalan LPG' && $user->pangkalanProfile) {
+                            $kontak = $user->pangkalanProfile->kontak;
+                        }
+                    @endphp
                     <tr x-data="{ openReset: false }" class="hover:bg-slate-50/50 transition-colors {{ !$user->status_aktif ? 'opacity-60' : '' }}">
                         <td class="py-4 px-6 text-slate-500">{{ $loop->iteration }}</td>
                         <td class="py-4 px-6">
                             <div class="font-bold text-slate-800">{{ $user->name }}</div>
+                            @if($kontak)
+                            <div class="mt-1.5 flex items-center gap-1.5 text-xs text-slate-500 font-medium bg-slate-100/50 px-2.5 py-1 rounded-md inline-flex border border-slate-200/60">
+                                <i class="fa-brands fa-whatsapp text-emerald-500 text-sm"></i> {{ $kontak }}
+                            </div>
+                            @endif
                             @if($user->force_password_change)
-                            <span class="text-xs text-amber-600 flex items-center gap-1 mt-0.5">
+                            <div class="text-[11px] text-amber-600 flex items-center gap-1 mt-1.5 font-medium">
                                 <i class="fa-solid fa-key"></i> Wajib ganti password
-                            </span>
+                            </div>
                             @endif
                         </td>
                         <td class="py-4 px-6 text-slate-600">{{ $user->username }}</td>
                         <td class="py-4 px-6">
                             @php
-                                $roleName = $user->roles->first()->name ?? 'Tanpa Role';
                                 $badgeClass = match($roleName) {
-                                    'Super Admin'    => 'bg-emerald-100 text-emerald-700',
-                                    'Disperindag'    => 'bg-cyan-100 text-cyan-700',
-                                    'Agen LPG'       => 'bg-amber-100 text-amber-700',
-                                    'Pangkalan LPG'  => 'bg-orange-100 text-orange-700',
-                                    'Pengawas'       => 'bg-purple-100 text-purple-700',
-                                    default          => 'bg-slate-100 text-slate-700'
+                                    'Super Admin'    => 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+                                    'Disperindag'    => 'bg-cyan-100 text-cyan-700 border border-cyan-200',
+                                    'Agen LPG'       => 'bg-amber-100 text-amber-700 border border-amber-200',
+                                    'Pangkalan LPG'  => 'bg-orange-100 text-orange-700 border border-orange-200',
+                                    'Pengawas'       => 'bg-purple-100 text-purple-700 border border-purple-200',
+                                    default          => 'bg-slate-100 text-slate-700 border border-slate-200'
                                 };
                             @endphp
-                            <span class="px-3 py-1 rounded-full text-xs font-semibold {{ $badgeClass }}">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold shadow-sm {{ $badgeClass }}">
                                 {{ $roleName }}
                             </span>
                         </td>
@@ -171,11 +184,17 @@
                                                 <i class="fa-solid fa-xmark text-lg"></i>
                                             </button>
                                         </div>
-                                        <div class="p-6">
+                                        <div class="p-6" x-data="{ show: false }">
                                             <label class="block mb-2 text-xs font-bold text-slate-700">Password Sementara</label>
-                                            <input type="password" name="password" required minlength="8"
-                                                   class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
-                                                   placeholder="Masukkan password sementara (min. 8 karakter)">
+                                            <div class="relative">
+                                                <input :type="show ? 'text' : 'password'" name="password" required minlength="8"
+                                                       class="w-full pl-4 pr-10 py-2.5 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
+                                                       placeholder="Masukkan password sementara (min. 8 karakter)">
+                                                <button type="button" @click="show = !show" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-brand focus:outline-none transition-colors">
+                                                    <i class="fa-regular fa-eye" x-show="!show"></i>
+                                                    <i class="fa-regular fa-eye-slash" x-show="show" x-cloak></i>
+                                                </button>
+                                            </div>
                                         </div>
                                         <div class="px-6 pb-6 flex justify-end gap-3">
                                             <button type="button" @click="openReset = false" class="px-4 py-2 text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Batal</button>
